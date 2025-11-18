@@ -1,0 +1,21 @@
+/* ============================================
+   GLOBAL STYLES - Globálne štýly aplikácie
+   ============================================
+
+   Sem patrí:
+   - Tailwind directives (@tailwind base, components, utilities)
+   - CSS reset/normalize
+   - Globálne CSS premenné (farby, spacing, ak používate CSS vars)
+   - Utility classes (ak potrebujete custom)
+   - Animácie (@keyframes)
+   - Globálne štýly pre body, html
+   - Font imports ak nie sú cez next/font
+
+   TailwindCSS konfigurácia je v tailwind.config.ts
+*/
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Tu pridať custom global styles */
