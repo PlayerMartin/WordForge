@@ -131,13 +131,14 @@ wordforge/
 
 ```
 
-
 ### 1. Inicializácia Projektu
+
 ```bash
 npm install
 ```
 
 ### 2. Nastavenie Databázy
+
 ```bash
 # Vytvor .env.local súbor
 # Pridaj DATABASE_URL a ostatné premenné
@@ -150,22 +151,26 @@ npx prisma studio
 ```
 
 ### 3. Pridanie Wordlistov
+
 - Stiahni wordlisty (pozri `prisma/wordlists/README.md`)
 - Umiestni ich do `prisma/wordlists/`
 - Implementuj `prisma/seed.ts`
 - Spusti `npm run db:seed`
 
 ### 4. Nastavenie Auth
+
 - Získaj GitHub OAuth credentials
 - Pridaj do `.env.local`
 - Implementuj `src/lib/auth/authOptions.ts`
 
 ### 5. Vývoj
+
 ```bash
 npm run dev
 ```
 
 ### 6. Deployment
+
 ```bash
 # Push do GitHub
 git push
