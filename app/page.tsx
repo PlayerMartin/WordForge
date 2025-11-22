@@ -12,3 +12,7 @@
 // - Footer s odkazmi
 //
 // Server Component - môže načítať top hráčov z DB priamo
+
+const Home = () => <h1 className="text-3xl">WordForge</h1>;
+
+export default Home;

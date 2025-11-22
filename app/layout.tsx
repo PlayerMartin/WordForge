@@ -11,3 +11,23 @@
 // - Analytics ak budú potrebné
 //
 // Tento layout obaľuje všetky stránky v aplikácii
+
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "WordForge",
+};
+
+const RootLayout = ({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) => (
+  <html lang="en">
+    <body>
+      <main className="container py-10">{children}</main>
+    </body>
+  </html>
+);
+
+export default RootLayout;
