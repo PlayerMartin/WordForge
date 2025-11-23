@@ -1,30 +1,82 @@
 "use client";
 
+import { Input } from "@/components/auth/input";
+import { UserSigninData, userSigninSchema } from "@/types";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { getProviders, signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
 
 export default function SignInPage() {
   const [providers, setProviders] = useState<any>(null);
+  const form = useForm<UserSigninData>({
+    resolver: zodResolver(userSigninSchema),
+  });
+  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    getProviders().then(setProviders);
+    const fetchProviders = async () => {
+      const res = await getProviders();
+      setProviders(res);
+    };
+    fetchProviders();
   }, []);
 
-  if (!providers) return null;
+  const onSubmit = async (data: UserSigninData) => {
+    setError(null);
+
+    const res = await signIn("credentials", {
+      ...data,
+      redirect: false,
+    });
+
+    if (!res?.error) {
+      router.replace("/");
+      return;
+    }
+
+    switch (res.error) {
+      case "user_not_found":
+        setError("User does not exist");
+        break;
+      case "invalid_password":
+        setError("Incorrect password");
+        break;
+      case "provider_account":
+        setError("You signed up using a provider, not credentials");
+        break;
+      default:
+        setError("Something went wrong");
+    }
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">Sign in</h1>
-      {Object.values(providers).map((provider: any) => (
-        <div key={provider.name} className="mb-2">
-          <button
-            onClick={() => signIn(provider.id, { callbackUrl: "/" })}
-            className="px-4 py-2 bg-blue-600 text-white rounded"
-          >
-            Sign in with {provider.name}
-          </button>
-        </div>
-      ))}
+    <div>
+      <h1>Sign Up</h1>
+
+      {error && <p>{error}</p>}
+
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <FormProvider {...form}>
+          <Input name="name" placeholder="Name" type="text" />
+          <Input name="password" placeholder="Password" type="password" />
+        </FormProvider>
+
+        <button type="submit">Sign In</button>
+      </form>
+
+      {providers &&
+        Object.values(providers)
+          .filter((p: any) => p.id !== "credentials")
+          .map((provider: any) => (
+            <div key={provider.name}>
+              <button onClick={() => signIn(provider.id, { callbackUrl: "/" })}>
+                Sign in with {provider.name}
+              </button>
+            </div>
+          ))}
     </div>
   );
 }

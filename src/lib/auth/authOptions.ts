@@ -1,35 +1,98 @@
-// ============================================
-// AUTH OPTIONS - NextAuth konfigurácia
-// ============================================
-//
-// Sem patrí:
-// - Export authOptions pre NextAuth
-// - Konfigurácia providers (GitHub, Google, Credentials)
-// - Callbacks:
-//   - session: pridať userId, username do session objektu
-//   - jwt: pridať custom data do JWT tokenu
-//   - signIn: vytvorenie používateľa v DB pri prvom prihlásení (OAuth)
-//
-// - Pages konfigurácia:
-//   - signIn: '/auth/signin'
-//   - signUp: '/auth/signup'
-//   - error: '/auth/error'
-//
-// - Prisma Adapter pre ukladanie sessions
-//
-// Použitie v route.ts:
-// import { authOptions } from '@/lib/auth/authOptions'
-// const handler = NextAuth(authOptions)
-//
-// Použitie v Server Components:
-// import { getServerSession } from 'next-auth'
-// import { authOptions } from '@/lib/auth/authOptions'
-// const session = await getServerSession(authOptions)
-//
-// Implementácia:
-// import { NextAuthOptions } from 'next-auth'
-// import { PrismaAdapter } from '@next-auth/prisma-adapter'
-// import GitHubProvider from 'next-auth/providers/github'
-// import { prisma } from '@/lib/prisma'
-//
-// export const authOptions: NextAuthOptions = { ... }
+import GithubProvider from "next-auth/providers/github";
+import Credentials from "next-auth/providers/credentials";
+import { prisma } from "@/lib/prisma";
+import { NextAuthOptions, Session, SessionOptions, User } from "next-auth";
+import { JWT } from "next-auth/jwt";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { UserSigninData } from "@/types";
+import bcrypt from "bcryptjs";
+
+export const SIGNIN_PAGE = "/auth/signin";
+
+// PROVIDERS
+export const Github = GithubProvider({
+  clientId: process.env.GITHUB_CLIENT_ID!,
+  clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+});
+
+export const CustomCredentials = Credentials({
+  name: "Credentials",
+  credentials: {
+    name: {
+      label: "Username",
+      type: "text",
+    },
+    password: { label: "Password", type: "password" },
+  },
+  async authorize(credentials) {
+    const { name, password } = credentials as UserSigninData;
+
+    const user = await prisma.user.findUnique({
+      where: { name: name },
+    });
+
+    if (!user) {
+      throw new Error("user_not_found");
+    }
+
+    if (!user.password) {
+      throw new Error("provider_account");
+    }
+
+    if (password !== user.password) {
+      throw new Error("invalid_password");
+    }
+
+    const isValid = await bcrypt.compare(password, user.password);
+    if (!isValid) {
+      throw new Error("invalid_password");
+    }
+
+    return user;
+  },
+});
+
+// SESSION CONFIG
+export const SessionConfig: Partial<SessionOptions> = {
+  strategy: "jwt",
+  maxAge: 3000,
+};
+
+export const jwtCallback = async ({
+  token,
+  user,
+}: {
+  token: JWT;
+  user?: User;
+}) => {
+  if (user) {
+    token.id = user.id;
+  }
+  return token;
+};
+
+export const sessionCallback = async ({
+  session,
+  token,
+}: {
+  session: Session;
+  token: JWT;
+}) => {
+  session.user.id = token.id;
+  return session;
+};
+
+// NEXTAUTH OPTIONS
+export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma),
+  providers: [Github, CustomCredentials],
+  session: SessionConfig,
+  secret: process.env.NEXTAUTH_SECRET,
+  callbacks: {
+    jwt: jwtCallback,
+    session: sessionCallback,
+  },
+  pages: {
+    signIn: SIGNIN_PAGE,
+  },
+};

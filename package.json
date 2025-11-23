@@ -14,31 +14,31 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@hookform/resolvers": "^3.3.2 // Resolvers pre RHF",
+    "@next-auth/prisma-adapter": "^1.0.7 // Prisma adapter pre NextAuth",
+    "@prisma/client": "^5.0.0 // Prisma Client pre databázu",
+    "bcryptjs": "^3.0.3",
+    "clsx": "^2.0.0 // Class name utility",
+    "date-fns": "^2.30.0 // Date manipulation (voliteľné)",
     "next": "^14.0.0 // Next.js framework",
+    "next-auth": "^4.24.0 // Autentifikácia",
     "react": "^18.0.0 // React library",
     "react-dom": "^18.0.0 // React DOM",
-    "@prisma/client": "^5.0.0 // Prisma Client pre databázu",
-    "next-auth": "^4.24.0 // Autentifikácia",
-    "@next-auth/prisma-adapter": "^1.0.7 // Prisma adapter pre NextAuth",
-    "bcrypt": "^5.1.1 // Hash hesiel",
     "react-hook-form": "^7.48.0 // Form management",
-    "@hookform/resolvers": "^3.3.2 // Resolvers pre RHF",
-    "zod": "^3.22.0 // Validačné schémy",
-    "tailwindcss": "^3.3.0 // TailwindCSS",
-    "clsx": "^2.0.0 // Class name utility",
     "tailwind-merge": "^2.0.0 // Merge Tailwind classes",
-    "date-fns": "^2.30.0 // Date manipulation (voliteľné)"
+    "tailwindcss": "^3.3.0 // TailwindCSS",
+    "zod": "^3.22.0 // Validačné schémy"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
+    "@types/bcrypt": "^5.0.0",
     "@types/node": "^20.0.0",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
-    "@types/bcrypt": "^5.0.0",
-    "prisma": "^5.0.0 // Prisma CLI",
     "eslint": "^8.0.0",
     "eslint-config-next": "^14.0.0",
-    "ts-node": "^10.9.0 // Spustenie seed scriptu"
+    "prisma": "^5.0.0 // Prisma CLI",
+    "ts-node": "^10.9.0 // Spustenie seed scriptu",
+    "typescript": "^5.0.0"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
