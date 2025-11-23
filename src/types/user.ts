@@ -46,6 +46,13 @@ export interface PersonalBest {
   achievedAt: Date;
 }
 
+export type User = {
+  name: string;
+  email: string;
+  password: string;
+};
+
+// AUTH
 export const userSignupSchema = z
   .object({
     name: z.string().min(3, "Username must be longer than 2 characters"),
@@ -66,9 +73,3 @@ export const userSigninSchema = z.object({
 });
 
 export type UserSigninData = z.infer<typeof userSigninSchema>;
-
-export type User = {
-  name: string;
-  email: string;
-  password: string;
-};
