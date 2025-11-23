@@ -1,3 +1,6 @@
+import { siteConfig } from "@/config/siteConfig";
+import { Metadata } from "next";
+
 // ============================================
 // ROOT LAYOUT - Hlavný layout pre celú aplikáciu
 // ============================================
@@ -12,10 +15,30 @@
 //
 // Tento layout obaľuje všetky stránky v aplikácii
 
-import { Metadata } from "next";
-
 export const metadata: Metadata = {
-  title: "WordForge",
+  title: {
+    default: siteConfig.name,
+    template: `%s | ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+  keywords: ["word game", "word chain", "wordforge", "online game"],
+  authors: [{ name: siteConfig.creator }],
+  creator: siteConfig.creator,
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: siteConfig.url,
+    title: siteConfig.name,
+    description: siteConfig.description,
+    siteName: siteConfig.name,
+    images: [{ url: siteConfig.ogImage }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.name,
+    description: siteConfig.description,
+    images: [siteConfig.ogImage],
+  },
 };
 
 const RootLayout = ({
