@@ -1,6 +1,6 @@
 "use client";
 
-import { Input } from "@/components/auth/input";
+import { AuthInput } from "@/components/auth/auth-input";
 import { UserSigninData, userSigninSchema } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getProviders, signIn } from "next-auth/react";
@@ -54,14 +54,14 @@ export default function SignInPage() {
 
   return (
     <div>
-      <h1>Sign Up</h1>
+      <h1>Sign In</h1>
 
       {error && <p>{error}</p>}
 
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormProvider {...form}>
-          <Input name="name" placeholder="Name" type="text" />
-          <Input name="password" placeholder="Password" type="password" />
+          <AuthInput name="name" placeholder="Name" type="text" />
+          <AuthInput name="password" placeholder="Password" type="password" />
         </FormProvider>
 
         <button type="submit">Sign In</button>

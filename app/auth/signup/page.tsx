@@ -6,7 +6,7 @@ import { SignUp } from "@/actions/authActions";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserSignupData, userSignupSchema } from "@/types";
-import { Input } from "@/components/auth/input";
+import { AuthInput } from "@/components/auth/auth-input";
 
 export default function SignUpPage() {
   const form = useForm<UserSignupData>({
@@ -37,10 +37,10 @@ export default function SignUpPage() {
 
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FormProvider {...form}>
-          <Input name="name" placeholder="Name" type="text" />
-          <Input name="email" placeholder="Email" type="email" />
-          <Input name="password" placeholder="Password" type="password" />
-          <Input
+          <AuthInput name="name" placeholder="Name" type="text" />
+          <AuthInput name="email" placeholder="Email" type="email" />
+          <AuthInput name="password" placeholder="Password" type="password" />
+          <AuthInput
             name="password2"
             placeholder="Password Again"
             type="password"

@@ -6,7 +6,7 @@ type InputProps = {
   type: string;
 };
 
-export const Input = ({ name, placeholder, type }: InputProps) => {
+export const AuthInput = ({ name, placeholder, type }: InputProps) => {
   const {
     register,
     formState: { errors },
