@@ -42,7 +42,7 @@ model User {
   image         String?   // Avatar URL
 
   // = Custom polia pre WordForge =
-  username      String?   @unique // Zobrazované meno na rebríčku
+  name      String?   @unique // Zobrazované meno na rebríčku
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

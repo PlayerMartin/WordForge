@@ -1,3 +1,4 @@
+import { Providers } from "@/components/utils/providers";
 import { siteConfig } from "@/config/siteConfig";
 import { Metadata } from "next";
 
@@ -48,7 +49,9 @@ const RootLayout = ({
 }>) => (
   <html lang="en">
     <body>
-      <main className="container py-10">{children}</main>
+      <main className="container py-10">
+        <Providers>{children}</Providers>
+      </main>
     </body>
   </html>
 );

@@ -1,3 +1,7 @@
+"use client";
+
+import { useSession, signIn, signOut } from "next-auth/react";
+
 // ============================================
 // HOMEPAGE - Úvodná stránka aplikácie
 // ============================================
@@ -13,6 +17,24 @@
 //
 // Server Component - môže načítať top hráčov z DB priamo
 
-const Home = () => <h1 className="text-3xl">WordForge</h1>;
+const Home = () => {
+  const { data: session } = useSession();
+
+  if (session && session.user) {
+    return (
+      <>
+        Signed in as {session.user.name} <br />
+        <button onClick={() => signOut()}>Sign out</button>
+      </>
+    );
+  }
+
+  return (
+    <>
+      Not signed in <br />
+      <button onClick={() => signIn()}>Sign in</button>
+    </>
+  );
+};
 
 export default Home;
