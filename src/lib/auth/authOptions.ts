@@ -6,6 +6,7 @@ import { JWT } from "next-auth/jwt";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { UserSigninData } from "@/types";
 import bcrypt from "bcryptjs";
+import { FindUserByName } from "@/repositories/user-repository";
 
 export const SIGNIN_PAGE = "/auth/signin";
 
@@ -27,9 +28,7 @@ export const CustomCredentials = Credentials({
   async authorize(credentials) {
     const { name, password } = credentials as UserSigninData;
 
-    const user = await prisma.user.findUnique({
-      where: { name: name },
-    });
+    const user = await FindUserByName(name);
 
     if (!user) {
       throw new Error("user_not_found");
@@ -37,10 +36,6 @@ export const CustomCredentials = Credentials({
 
     if (!user.password) {
       throw new Error("provider_account");
-    }
-
-    if (password !== user.password) {
-      throw new Error("invalid_password");
     }
 
     const isValid = await bcrypt.compare(password, user.password);
