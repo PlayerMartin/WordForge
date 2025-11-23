@@ -4,9 +4,10 @@ import { Prisma } from "@prisma/client";
 
 export const CreateUser = async (user: User) => {
   try {
-    return prisma.user.create({
+    await prisma.user.create({
       data: user,
     });
+    return { ok: true };
   } catch (error: any) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
