@@ -46,8 +46,15 @@ import { GameSettings } from "@/types";
 // - Autentifikácia check
 // - Return type-safe responses
 
+/**
+ * Finds the users active game.
+ * If user does not have any active game, then the game is created.
+ * @param userId
+ * @param settings
+ * @returns the active gameID
+ */
 export const JoinGame = async (userId: string, settings: GameSettings) => {
-  const activeGame = await gameRepository.FindActiveGame(userId);
+  const activeGame = await gameRepository.FindActiveGameByUserId(userId);
 
   if (activeGame) {
     return activeGame;
@@ -58,4 +65,8 @@ export const JoinGame = async (userId: string, settings: GameSettings) => {
 
 export const FinishGame = async (gameId: string) => {
   return await gameRepository.FinishGame(gameId);
+};
+
+export const GameExists = async (gameId: string) => {
+  return await gameRepository.GameExists(gameId);
 };

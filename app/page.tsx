@@ -21,26 +21,35 @@ import { useRouter } from "next/navigation";
 
 const Home = () => {
   const router = useRouter();
-  const { data: session } = useSession();
+  const session = useSession();
 
   const onClick = async () => {
-    if (!session?.user.id) {
+    if (!session.data?.user.id) {
       router.push("/auth/signin");
       return;
     }
 
-    router.push("/game");
+    const gameID = await JoinGame(session.data?.user.id, {
+      mode: "solo_classic",
+      scoringMode: "length",
+      visibilityMode: "open",
+      language: "en",
+      turnTimeLimit: -1,
+      globalTimeLimit: -1,
+    });
+
+    router.push(`/game/${gameID}`);
   };
 
   return (
     <>
-      {session && session.user ? (
-        <p>Signed in as {session.user.name}</p>
+      {session.data?.user ? (
+        <p>Signed in as {session.data.user.name}</p>
       ) : (
         <p>Not signed in</p>
       )}
 
-      {session && session.user ? (
+      {session.data?.user ? (
         <button onClick={() => signOut()}>Sign out</button>
       ) : (
         <>

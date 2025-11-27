@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { GameSettings } from "@/types";
 
 export const CreateGame = async (userId: string, settings: GameSettings) => {
-  return await prisma.game.create({
+  const game = await prisma.game.create({
     data: {
       ...settings,
       userId: userId,
@@ -10,7 +10,11 @@ export const CreateGame = async (userId: string, settings: GameSettings) => {
       wordCount: 0,
       wordsUsed: [],
     },
+    select: {
+      id: true,
+    },
   });
+  return game.id;
 };
 
 export const FinishGame = async (gameId: string) => {
@@ -34,11 +38,23 @@ export const FinishGame = async (gameId: string) => {
   return { ok: true };
 };
 
-export const FindActiveGame = async (userId: string) => {
-  return await prisma.game.findFirst({
+export const FindActiveGameByUserId = async (userId: string) => {
+  const game = await prisma.game.findFirst({
     where: {
       userId: userId,
       finishedAt: null,
+    },
+    select: {
+      id: true,
+    },
+  });
+  return game?.id ?? null;
+};
+
+export const GameExists = async (gameId: string) => {
+  return await prisma.game.findFirst({
+    where: {
+      id: gameId,
     },
   });
 };
