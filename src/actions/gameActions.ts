@@ -1,3 +1,8 @@
+"use server";
+
+import * as gameRepository from "@/repositories/game-repository";
+import { GameSettings } from "@/types";
+
 // ============================================
 // GAME ACTIONS - Server actions pre hru
 // ============================================
@@ -40,3 +45,17 @@
 // - Error handling (try/catch)
 // - Autentifikácia check
 // - Return type-safe responses
+
+export const JoinGame = async (userId: string, settings: GameSettings) => {
+  const activeGame = await gameRepository.FindActiveGame(userId);
+
+  if (activeGame) {
+    return activeGame;
+  }
+
+  return await gameRepository.CreateGame(userId, settings);
+};
+
+export const FinishGame = async (gameId: string) => {
+  return await gameRepository.FinishGame(gameId);
+};

@@ -1,22 +1,51 @@
-// ============================================
-// GAME PAGE - Hlavná herná stránka
-// ============================================
-//
-// Sem patrí:
-// - GameSetup komponenta (ak hra ešte nezačala)
-//   - Výber módu: Solo Classic
-//   - Výber skórovania: Tempo (+1/slovo) vs Length (floor(len/3))
-//   - Výber režimu: Odkrytá (repeated = 0 bodov) vs Skrytá (repeated = -1 život, 3 životy)
-//   - Výber jazyka: EN, CZ, SK
-//   - Tlačidlo "Začať hru"
-//
-// - GamePlay komponenta (keď hra beží)
-//   - Render <GameBoard /> s celým stavom hry
-//
-// - GameResults komponenta (po skončení hry)
-//   - Finálne skóre, počet slov, najdlhšie slovo
-//   - Porovnanie s osobným rekordom
-//   - Pozícia na rebríčku
-//   - Tlačidlá: "Hrať znova", "Zobraziť rebríček", "Späť na hlavnú"
-//
-// Client Component - musí mať interaktivitu, state manažment
+"use client";
+
+import { FinishGame, JoinGame } from "@/actions/gameActions";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+
+const Game = () => {
+  const [gameId, setGameId] = useState("");
+  const session = useSession();
+  const router = useRouter();
+
+  const joinGame = async () => {
+    if (session.status === "loading") {
+      return;
+    }
+
+    if (session.status === "unauthenticated" || !session.data?.user) {
+      router.push("/auth/signup");
+      return;
+    }
+
+    const game = await JoinGame(session.data?.user.id, {
+      mode: "solo_classic",
+      scoringMode: "length",
+      visibilityMode: "open",
+      language: "en",
+      turnTimeLimit: -1,
+      globalTimeLimit: -1,
+    });
+    setGameId(game.id);
+  };
+
+  const leaveGame = async () => {
+    await FinishGame(gameId);
+    router.push("/");
+  };
+
+  useEffect(() => {
+    joinGame();
+  }, []);
+
+  return (
+    <div>
+      {gameId ? <h1>Welcome to game {gameId}</h1> : <h1>Joining game...</h1>}
+      <button onClick={leaveGame}>Leave</button>
+    </div>
+  );
+};
+
+export default Game;

@@ -1,5 +1,6 @@
 "use client";
 
+import { JoinGame } from "@/actions/gameActions";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -22,20 +23,33 @@ const Home = () => {
   const router = useRouter();
   const { data: session } = useSession();
 
-  if (session && session.user) {
-    return (
-      <>
-        Signed in as {session.user.name} <br />
-        <button onClick={() => signOut()}>Sign out</button>
-      </>
-    );
-  }
+  const onClick = async () => {
+    if (!session?.user.id) {
+      router.push("/auth/signin");
+      return;
+    }
+
+    router.push("/game");
+  };
 
   return (
     <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
-      <button onClick={() => router.push("auth/signup")}>Sign up</button>
+      {session && session.user ? (
+        <p>Signed in as {session.user.name}</p>
+      ) : (
+        <p>Not signed in</p>
+      )}
+
+      {session && session.user ? (
+        <button onClick={() => signOut()}>Sign out</button>
+      ) : (
+        <>
+          <button onClick={() => signIn()}>Sign in</button>
+          <button onClick={() => router.push("auth/signup")}>Sign up</button>
+        </>
+      )}
+
+      <button onClick={onClick}>Start game</button>
     </>
   );
 };
