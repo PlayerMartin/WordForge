@@ -40,9 +40,10 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?   // Avatar URL
+  password      String? // password field for credentials login
 
   // = Custom polia pre WordForge =
-  username      String?   @unique // Zobrazované meno na rebríčku
+  name      String?   @unique // Zobrazované meno na rebríčku
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
