@@ -67,6 +67,6 @@ export const FinishGame = async (gameId: string) => {
   return await gameRepository.FinishGame(gameId);
 };
 
-export const GameExists = async (gameId: string) => {
-  return await gameRepository.GameExists(gameId);
+export const GetGame = async (gameId: string) => {
+  return await gameRepository.GetGame(gameId);
 };

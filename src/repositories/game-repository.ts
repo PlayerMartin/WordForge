@@ -51,7 +51,7 @@ export const FindActiveGameByUserId = async (userId: string) => {
   return game?.id ?? null;
 };
 
-export const GameExists = async (gameId: string) => {
+export const GetGame = async (gameId: string) => {
   return await prisma.game.findFirst({
     where: {
       id: gameId,

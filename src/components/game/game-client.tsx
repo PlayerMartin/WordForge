@@ -1,6 +1,7 @@
 "use client";
 
-import { FinishGame, GameExists } from "@/actions/gameActions";
+import { FinishGame, GetGame } from "@/actions/gameActions";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -11,17 +12,31 @@ interface GameClientProps {
 const GameClient = ({ gameId }: GameClientProps) => {
   const [error, setError] = useState("");
   const router = useRouter();
+  const session = useSession();
 
   useEffect(() => {
-    const validateGameID = async () => {
-      const res = await GameExists(gameId);
-      if (!res) {
+    const checkGame = async () => {
+      if (session.status === "loading") {
+        return;
+      }
+
+      const game = await GetGame(gameId);
+      if (!game) {
         setError("Game ID is not valid");
         return;
       }
+      if (game.userId !== session.data?.user.id) {
+        setError("Unauthorized");
+        return;
+      }
+      if (game.finishedAt) {
+        setError("Game already ended");
+        return;
+      }
     };
-    validateGameID();
-  }, []);
+
+    checkGame();
+  }, [session]);
 
   const leaveGame = async () => {
     await FinishGame(gameId);
@@ -30,8 +45,12 @@ const GameClient = ({ gameId }: GameClientProps) => {
 
   return (
     <div>
-      {!error && <h1>Welcome to game {gameId}</h1>}
-      {!error && <button onClick={leaveGame}>Leave</button>}
+      {!error && session.status === "authenticated" && (
+        <>
+          <h1>Welcome to game {gameId}</h1>
+          <button onClick={leaveGame}>Leave</button>
+        </>
+      )}
 
       {error && <h1>{error}</h1>}
     </div>
