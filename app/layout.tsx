@@ -1,6 +1,7 @@
 import { Providers } from "@/components/utils/providers";
 import { siteConfig } from "@/config/siteConfig";
 import { Metadata } from "next";
+import "./globals.css";
 
 // ============================================
 // ROOT LAYOUT - Hlavný layout pre celú aplikáciu
@@ -48,10 +49,8 @@ const RootLayout = ({
   children: React.ReactNode;
 }>) => (
   <html lang="en">
-    <body>
-      <main className="container py-10">
-        <Providers>{children}</Providers>
-      </main>
+    <body className="min-h-screen bg-surface-50 text-surface-900 antialiased">
+      <Providers>{children}</Providers>
     </body>
   </html>
 );
