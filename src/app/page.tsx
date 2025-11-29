@@ -1,11 +1,13 @@
 "use client";
 
-import { JoinGame } from "@/actions/gameActions";
+import { JoinGame, StartGameForMode } from "@/actions/gameActions";
 import { Button, Card } from "@/components/ui";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import GameModeSelector from "@/modules/game/components/game-mode-selector";
+import { GAME_MODES, GameModeId } from "@/modules/game/config/modes";
 
 const rules = [
   {
@@ -38,18 +40,12 @@ const floatingLetters = [
   { letter: "E", size: 42, left: 86, top: 43, delay: 2.7, duration: 3.1 },
 ];
 
-const gameModes = [
-  { title: "Tempo Mode", description: "Score points based on how fast you answer. Quick thinking wins!", borderColor: "border-l-primary-500" },
-  { title: "Length Mode", description: "Longer words = more points. Think of the longest valid word!", borderColor: "border-l-secondary-500" },
-  { title: "Open Mode", description: "See all your previously used words. Plan your strategy!", borderColor: "border-l-success-500" },
-  { title: "Hidden Mode", description: "Can't see used words. 3 lives - don't repeat yourself!", borderColor: "border-l-warning-500" },
-];
-
 const Home = () => {
   const router = useRouter();
   const session = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const [activeRule, setActiveRule] = useState(0);
+  const [selectedModeId, setSelectedModeId] = useState<GameModeId>("length");
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -58,28 +54,25 @@ const Home = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleStartGame = async () => {
-    if (!session.data?.user.id) {
-      router.push("/auth/signin");
-      return;
-    }
+const handleStartGame = async () => {
+  if (!session.data?.user.id) {
+    router.push("/auth/signin");
+    return;
+  }
 
-    setIsLoading(true);
-    try {
-      const gameID = await JoinGame(session.data?.user.id, {
-        mode: "solo_classic",
-        scoringMode: "length",
-        visibilityMode: "open",
-        language: "en",
-        turnTimeLimit: -1,
-        globalTimeLimit: -1,
-      });
+  setIsLoading(true);
+  try {
+    const gameID = await StartGameForMode(
+      session.data.user.id,
+      selectedModeId,
+      "en"
+    );
 
-      router.push(`/game/${gameID}`);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    router.push(`/game/${gameID}`);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50">
@@ -137,19 +130,13 @@ const Home = () => {
               <h2 className="text-2xl font-bold text-surface-900 mb-6">
                 Game Modes
               </h2>
-              <div className="flex flex-col gap-4">
-                {gameModes.map((mode) => (
-                  <Card
-                    key={mode.title}
-                    hover
-                    className={`border-l-4 ${mode.borderColor} bg-surface-900`}
-                  >
-                    <h3 className="font-semibold text-white mb-1">{mode.title}</h3>
-                    <p className="text-surface-300 text-sm">{mode.description}</p>
-                  </Card>
-                ))}
-              </div>
+
+              <GameModeSelector
+                selectedModeId={selectedModeId}
+                onChange={setSelectedModeId}
+              />
             </div>
+
 
             {/* Rules Carousel  Right Side */}
             <div className="flex flex-col">

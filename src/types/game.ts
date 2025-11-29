@@ -3,27 +3,32 @@
 // ============================================
 //
 // Sem patria všetky TypeScript typy a interfaces pre hru
+import { GameDbMode, ScoringMode, VisibilityMode } from "@/modules/game/config/modes";
+import { LanguageCode } from "@/modules/game/config/constants";
 
-// = Jazyky =
-export type Language = 'en' | 'cz' | 'sk'
-
-// = Herné módy =
-export type GameMode = 'solo_classic' | 'pvp' | 'coop' | 'challenge'
-
-// = Skórovacie módy =
-export type ScoringMode = 'tempo' | 'length'
-
-// = Režimy viditeľnosti =
-export type VisibilityMode = 'open' | 'hidden'
+export type GameMode = GameDbMode;
+export type Language = LanguageCode;
 
 // = Herné nastavenia =
 export interface GameSettings {
-  mode: GameMode
-  scoringMode: ScoringMode
-  visibilityMode: VisibilityMode
-  language: Language
-  turnTimeLimit: number // sekundy
-  globalTimeLimit: number // sekundy
+  mode: GameMode;
+  scoringMode: ScoringMode;
+  visibilityMode: VisibilityMode;
+  language: Language;
+  turnTimeLimit: number; 
+  globalTimeLimit: number; 
+}
+
+export interface DbGame {
+  id: string;
+  userId: string;
+  mode: GameMode;
+  scoringMode: ScoringMode;
+  visibilityMode: VisibilityMode;
+  language: Language;
+  score: number;
+  wordsUsed: string[] | null;
+  finishedAt: number | null;
 }
 
 // = Jedno slovo v hre =
