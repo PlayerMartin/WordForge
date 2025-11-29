@@ -1,16 +1,20 @@
-import { prisma } from "@/lib/prisma";
+import { db, users } from "@/lib/db";
 import { User } from "@/types";
-import { Prisma } from "@prisma/client";
+import { eq } from "drizzle-orm";
+import { LibsqlError } from "@libsql/client";
 
 export const CreateUser = async (user: User) => {
   try {
-    await prisma.user.create({
-      data: user,
+    await db.insert(users).values({
+      name: user.name,
+      email: user.email,
+      password: user.password,
     });
     return { ok: true };
-  } catch (error: any) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      if (error.code === "P2002") {
+  } catch (error: unknown) {
+    if (error instanceof LibsqlError) {
+      //unique constraint violation
+      if (error.code === "SQLITE_CONSTRAINT_UNIQUE") {
         if (error.message.includes("name")) {
           return { ok: false, err: "Username taken" };
         }
@@ -25,7 +29,11 @@ export const CreateUser = async (user: User) => {
 };
 
 export const FindUserByName = async (name: string) => {
-  return await prisma.user.findUnique({
-    where: { name: name },
-  });
+  const result = await db
+    .select()
+    .from(users)
+    .where(eq(users.name, name))
+    .limit(1);
+
+  return result[0] ?? null;
 };

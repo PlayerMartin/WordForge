@@ -1,9 +1,9 @@
 import GithubProvider from "next-auth/providers/github";
 import Credentials from "next-auth/providers/credentials";
-import { prisma } from "@/lib/prisma";
+import { db, users } from "@/lib/db";
 import { NextAuthOptions, Session, SessionOptions, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { UserSigninData } from "@/types";
 import bcrypt from "bcryptjs";
 import { FindUserByName } from "@/repositories/user-repository";
@@ -79,7 +79,7 @@ export const sessionCallback = async ({
 
 // NEXTAUTH OPTIONS
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  adapter: DrizzleAdapter(db) as NextAuthOptions["adapter"],
   providers: [Github, CustomCredentials],
   session: SessionConfig,
   secret: process.env.NEXTAUTH_SECRET,
