@@ -50,7 +50,7 @@ export const CustomCredentials = Credentials({
 // SESSION CONFIG
 export const SessionConfig: Partial<SessionOptions> = {
   strategy: "jwt",
-  maxAge: 3000,
+  maxAge: 7 * 24 * 60 * 60, // 7 days
 };
 
 export const jwtCallback = async ({

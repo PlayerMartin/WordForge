@@ -1,20 +1,27 @@
 "use client";
 
-import { AuthInput } from "@/components/auth/auth-input";
+import { Button, Card, Input } from "@/components/ui";
 import { UserSigninData, userSigninSchema } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { getProviders, signIn } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 export default function SignInPage() {
-  const [providers, setProviders] = useState<any>(null);
-  const form = useForm<UserSigninData>({
+  const [providers, setProviders] = useState<Record<string, any> | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UserSigninData>({
     resolver: zodResolver(userSigninSchema),
   });
-  const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProviders = async () => {
@@ -26,57 +33,138 @@ export default function SignInPage() {
 
   const onSubmit = async (data: UserSigninData) => {
     setError(null);
+    setIsLoading(true);
 
-    const res = await signIn("credentials", {
-      ...data,
-      redirect: false,
-    });
+    try {
+      const res = await signIn("credentials", {
+        ...data,
+        redirect: false,
+      });
 
-    if (!res?.error) {
-      router.replace("/");
-      return;
-    }
+      if (!res?.error) {
+        router.replace("/");
+        return;
+      }
 
-    switch (res.error) {
-      case "user_not_found":
-        setError("User does not exist");
-        break;
-      case "invalid_password":
-        setError("Incorrect password");
-        break;
-      case "provider_account":
-        setError("You signed up using a provider, not credentials");
-        break;
-      default:
-        setError("Something went wrong");
+      switch (res.error) {
+        case "user_not_found":
+          setError("User does not exist");
+          break;
+        case "invalid_password":
+          setError("Incorrect password");
+          break;
+        case "provider_account":
+          setError("This account uses social login. Please sign in with GitHub.");
+          break;
+        default:
+          setError("Something went wrong. Please try again.");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  const handleOAuthSignIn = (providerId: string) => {
+    setIsLoading(true);
+    signIn(providerId, { callbackUrl: "/" });
+  };
+
   return (
-    <div>
-      <h1>Sign In</h1>
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-surface-900 mb-2">
+            Welcome back
+          </h1>
+          <p className="text-surface-500">
+            Sign in to continue playing WordForge
+          </p>
+        </div>
 
-      {error && <p>{error}</p>}
-
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <FormProvider {...form}>
-          <AuthInput name="name" placeholder="Name" type="text" />
-          <AuthInput name="password" placeholder="Password" type="password" />
-        </FormProvider>
-
-        <button type="submit">Sign In</button>
-      </form>
-
-      {providers &&
-        Object.values(providers)
-          .filter((p: any) => p.id !== "credentials")
-          .map((provider: any) => (
-            <div key={provider.name}>
-              <button onClick={() => signIn(provider.id, { callbackUrl: "/" })}>
-                Sign in with {provider.name}
-              </button>
+        <Card padding="lg" className="animate-fade-in">
+          {error && (
+            <div className="mb-6 p-4 bg-error-50 border border-error-200 rounded-lg">
+              <p className="text-sm text-error-600">{error}</p>
             </div>
-          ))}
+          )}
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <Input
+              label="Username"
+              placeholder="Enter your username"
+              error={errors.name?.message}
+              {...register("name")}
+            />
+
+            <Input
+              label="Password"
+              type="password"
+              placeholder="Enter your password"
+              error={errors.password?.message}
+              {...register("password")}
+            />
+
+            <Button
+              type="submit"
+              fullWidth
+              size="lg"
+              loading={isLoading}
+              className="mt-6"
+            >
+              Sign In
+            </Button>
+          </form>
+
+          {providers && Object.values(providers).some((p: any) => p.id !== "credentials") && (
+            <>
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-surface-200" />
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-4 bg-white text-surface-500">
+                    Or continue with
+                  </span>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                {Object.values(providers)
+                  .filter((p: any) => p.id !== "credentials")
+                  .map((provider: any) => (
+                    <Button
+                      key={provider.id}
+                      type="button"
+                      variant="outline"
+                      fullWidth
+                      onClick={() => handleOAuthSignIn(provider.id)}
+                      disabled={isLoading}
+                      leftIcon={
+                        provider.id === "github" && (
+                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+                          </svg>
+                        )
+                      }
+                    >
+                      Continue with {provider.name}
+                    </Button>
+                  ))}
+              </div>
+            </>
+          )}
+
+          <p className="mt-6 text-center text-sm text-surface-500">
+            Don&apos;t have an account?{" "}
+            <Link
+              href="/auth/signup"
+              className="font-medium text-primary-600 hover:text-primary-500 transition-colors"
+            >
+              Sign up
+            </Link>
+          </p>
+        </Card>
+      </div>
     </div>
   );
 }
