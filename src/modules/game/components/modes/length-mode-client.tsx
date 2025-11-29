@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getLengthModeScore } from "../../utils/scoring";
+import { normalizeWord, validateWordLocally } from "../../utils/validation";
 
 interface LengthModeClientProps {
   game: DbGame;
@@ -38,36 +39,29 @@ const LengthModeClient = ({ game }: LengthModeClientProps) => {
   const handleSubmitWord = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!wordInput.trim() || isSubmitting) return;
-
+  
     setIsSubmitting(true);
     setFeedback(null);
-
-    const word = wordInput.trim().toLowerCase();
-
-    // Basic validation (frontend)
-    if (!word.startsWith(currentLetter.toLowerCase())) {
-      setFeedback({ type: "error", message: `Word must start with "${currentLetter}"` });
+  
+    const result = validateWordLocally({
+      rawInput: wordInput,
+      requiredLetter: currentLetter,
+      usedWords: wordsUsed,
+    });
+  
+    if (!result.valid) {
+      setFeedback({
+        type: "error",
+        message: result.message ?? "Invalid word",
+      });
       setIsSubmitting(false);
       return;
     }
-
-    if (wordsUsed.includes(word)) {
-      setFeedback({ type: "error", message: "Word already used!" });
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (word.length < 2) {
-      setFeedback({ type: "error", message: "Word must be at least 2 characters" });
-      setIsSubmitting(false);
-      return;
-    }
-
-    // TODO: backend validation once dictionary support is ready
-
+  
+    const word = normalizeWord(wordInput);
     const newLetter = word.charAt(word.length - 1).toUpperCase();
     const wordScore = getLengthModeScore(word);
-
+  
     setWordsUsed((prev) => [...prev, word]);
     setCurrentLetter(newLetter);
     setScore((prev) => prev + wordScore);
@@ -75,6 +69,8 @@ const LengthModeClient = ({ game }: LengthModeClientProps) => {
     setFeedback({ type: "success", message: `+${wordScore} points!` });
     setIsSubmitting(false);
   };
+  
+
 
   const leaveGame = async () => {
     await FinishGame(game.id);
