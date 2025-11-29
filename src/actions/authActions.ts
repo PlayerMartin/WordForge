@@ -1,6 +1,6 @@
 "use server";
 
-import * as userRepository from "@/repositories/user-repository";
+import * as userRepository from "@/modules/user/repositories/user-repository";
 import { User } from "@/types";
 import bcrypt from "bcryptjs";
 

@@ -1,6 +1,6 @@
 "use server";
 
-import * as gameRepository from "@/repositories/game-repository";
+import * as gameRepository from "@/modules/game/repositories/game-repository";
 import { GameSettings } from "@/types";
 
 // ============================================

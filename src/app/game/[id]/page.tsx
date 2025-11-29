@@ -1,4 +1,4 @@
-import GameClient from "@/components/game/game-client";
+import GameClient from "@/modules/game/components/game-client";
 
 type PageProps = {
   params: { id: string };
