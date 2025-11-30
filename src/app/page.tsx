@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import GameModeSelector from "@/modules/game/components/game-mode-selector";
 import { GameModeId } from "@/modules/game/config/modes";
-import FloatingLettersBackground from "@/components/ui/floating-letters-background";
 import HowToPlaySection from "@/components/ui/how-to-play-section";
 
 const Home = () => {
@@ -16,7 +15,6 @@ const Home = () => {
   const session = useSession();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [activeRule, setActiveRule] = useState(0);
   const [selectedModeId, setSelectedModeId] = useState<GameModeId>("length");
 
   const [activeGameId, setActiveGameId] = useState<string | null>(null);
