@@ -1,7 +1,7 @@
 // modules/game/repositories/game-repository.ts
 import { db, games } from "@/lib/db";
 import { GameSettings } from "@/types";
-import { eq, and, isNull } from "drizzle-orm";
+import { eq, and, isNull, desc  } from "drizzle-orm";
 import { LibsqlError } from "@libsql/client";
 
 export const CreateGame = async (userId: string, settings: GameSettings) => {
@@ -58,4 +58,15 @@ export const GetGame = async (gameId: string) => {
     .limit(1);
 
   return result[0] ?? null;
+};
+
+export const ListGamesByUserId = async (userId: string, limit = 10) => {
+  const result = await db
+    .select()
+    .from(games)
+    .where(eq(games.userId, userId))
+    .orderBy(desc(games.startedAt))
+    .limit(limit);
+
+  return result;
 };

@@ -55,3 +55,7 @@ export const StartGameForMode = async (
 
   return await JoinGame(userId, settings);
 };
+
+export const GetRecentGamesForUser = async (userId: string, limit = 10) => {
+  return await gameRepository.ListGamesByUserId(userId, limit);
+};
