@@ -87,3 +87,16 @@ export const ListGamesByUserId = async (userId: string, limit = 10) => {
 
   return result;
 };
+
+export const UpdateGameProgress = async (
+  gameId: string,
+  data: { score: number; wordsUsed: string[] }
+) => {
+  await db
+    .update(games)
+    .set({
+      score: data.score,
+      wordsUsed: data.wordsUsed,
+    })
+    .where(eq(games.id, gameId));
+};

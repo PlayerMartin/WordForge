@@ -19,12 +19,10 @@ export const JoinGame = async (userId: string, settings: GameSettings) => {
   if (activeGameId) {
     const activeGame = await gameRepository.GetGame(activeGameId);
 
-    // If there's an unfinished game with the same mode → reuse it
     if (activeGame && activeGame.mode === settings.mode) {
       return activeGameId;
     }
 
-    // Otherwise finish the old game before starting a new one
     if (activeGame) {
       await gameRepository.FinishGame(activeGameId);
     }
@@ -62,4 +60,11 @@ export const StartGameForMode = async (
 
 export const GetRecentGamesForUser = async (userId: string, limit = 10) => {
   return await gameRepository.ListGamesByUserId(userId, limit);
+};
+
+export const UpdateGameProgress = async (
+  gameId: string,
+  data: { score: number; wordsUsed: string[] }
+) => {
+  return await gameRepository.UpdateGameProgress(gameId, data);
 };
