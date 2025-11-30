@@ -6,7 +6,7 @@ import { JWT } from "next-auth/jwt";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { UserSigninData } from "@/types";
 import bcrypt from "bcryptjs";
-import { FindUserByName } from "@/repositories/user-repository";
+import { FindUserByName } from "@/modules/user/repositories/user-repository";
 
 export const SIGNIN_PAGE = "/auth/signin";
 

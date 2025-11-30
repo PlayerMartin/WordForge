@@ -58,10 +58,6 @@ export const games = sqliteTable("games", {
   visibilityMode: text("visibility_mode").notNull(),
   language: text("language").notNull(),
 
-  // Timer
-  turnTimeLimit: integer("turn_time_limit").notNull(),
-  globalTimeLimit: integer("global_time_limit").notNull(),
-
   // Results
   score: integer("score").notNull().default(0),
   wordCount: integer("word_count").notNull().default(0),

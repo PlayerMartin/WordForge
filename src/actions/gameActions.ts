@@ -1,6 +1,7 @@
 "use server";
 
-import * as gameRepository from "@/repositories/game-repository";
+import { GAME_MODES, GameModeId } from "@/modules/game/config/modes";
+import * as gameRepository from "@/modules/game/repositories/game-repository";
 import { GameSettings } from "@/types";
 
 // ============================================
@@ -53,15 +54,25 @@ import { GameSettings } from "@/types";
  * @param settings
  * @returns the active gameID
  */
+// actions/gameActions.ts
 export const JoinGame = async (userId: string, settings: GameSettings) => {
-  const activeGame = await gameRepository.FindActiveGameByUserId(userId);
+  const activeGameId = await gameRepository.FindActiveGameByUserId(userId);
 
-  if (activeGame) {
-    return activeGame;
+  if (activeGameId) {
+    const activeGame = await gameRepository.GetGame(activeGameId);
+
+    if (activeGame && activeGame.mode === settings.mode) {
+      return activeGameId;
+    }
+
+    if (activeGame) {
+      await gameRepository.FinishGame(activeGameId);
+    }
   }
 
   return await gameRepository.CreateGame(userId, settings);
 };
+
 
 export const FinishGame = async (gameId: string) => {
   return await gameRepository.FinishGame(gameId);
@@ -69,4 +80,25 @@ export const FinishGame = async (gameId: string) => {
 
 export const GetGame = async (gameId: string) => {
   return await gameRepository.GetGame(gameId);
+};
+
+export const StartGameForMode = async (
+  userId: string,
+  modeId: GameModeId,
+  language: "en" | "cz" | "sk" = "en"
+) => {
+  const modeConfig = GAME_MODES.find((m) => m.id === modeId);
+
+  if (!modeConfig) {
+    throw new Error(`Invalid game mode: ${modeId}`);
+  }
+
+  const settings: GameSettings = {
+    mode: modeConfig.dbMode,
+    scoringMode: modeConfig.scoringMode,
+    visibilityMode: modeConfig.visibilityMode,
+    language,
+  };
+
+  return await JoinGame(userId, settings);
 };
