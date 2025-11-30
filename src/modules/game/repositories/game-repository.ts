@@ -1,3 +1,4 @@
+// modules/game/repositories/game-repository.ts
 import { db, games } from "@/lib/db";
 import { GameSettings } from "@/types";
 import { eq, and, isNull } from "drizzle-orm";
@@ -7,10 +8,10 @@ export const CreateGame = async (userId: string, settings: GameSettings) => {
   const result = await db
     .insert(games)
     .values({
-      ...settings,
-      userId: userId,
+      userId,
+      mode: settings.mode,
+      language: settings.language,
       score: 0,
-      wordCount: 0,
       wordsUsed: [],
     })
     .returning({ id: games.id });

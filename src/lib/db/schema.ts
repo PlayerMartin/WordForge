@@ -50,27 +50,21 @@ export const verificationTokens = sqliteTable("verification_tokens", {
 
 export const games = sqliteTable("games", {
   id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
-  userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
 
-  // Game settings
-  mode: text("mode").notNull(), 
-  scoringMode: text("scoring_mode").notNull(),
-  visibilityMode: text("visibility_mode").notNull(),
+  mode: text("mode").notNull(),
   language: text("language").notNull(),
 
-  // Results
   score: integer("score").notNull().default(0),
-  wordCount: integer("word_count").notNull().default(0),
-  longestWord: text("longest_word"),
-  averageLength: real("average_length"),
-  wpm: real("wpm"),
-  accuracy: real("accuracy"),
+  wordsUsed: text("words_used", { mode: "json" })
+    .$type<string[]>()
+    .default([]),
 
-  // Words used stored as JSON string
-  wordsUsed: text("words_used", { mode: "json" }).$type<string[]>().default([]),
-
-  // Metadata
-  startedAt: integer("started_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  startedAt: integer("started_at", { mode: "timestamp" }).$defaultFn(
+    () => new Date()
+  ),
   finishedAt: integer("finished_at", { mode: "timestamp" }),
 });
 
@@ -95,8 +89,6 @@ export const leaderboardEntries = sqliteTable("leaderboard_entries", {
   userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
 
   mode: text("mode").notNull(),
-  scoringMode: text("scoring_mode").notNull(),
-  visibilityMode: text("visibility_mode").notNull(),
   language: text("language").notNull(),
 
   // Score data

@@ -6,8 +6,6 @@
 import { games } from "@/lib/db/schema";
 import {
   GameDbMode,
-  ScoringMode,
-  VisibilityMode,
 } from "@/modules/game/config/modes";
 import { LanguageCode } from "@/modules/game/config/constants";
 
@@ -17,8 +15,6 @@ export type Language = LanguageCode;
 // = Herné nastavenia (čo ukladáme do games) =
 export interface GameSettings {
   mode: GameMode;
-  scoringMode: ScoringMode;
-  visibilityMode: VisibilityMode;
   language: Language;
 }
 
@@ -28,8 +24,6 @@ export type DbGameRow = typeof games.$inferSelect;
 // = DbGame - row z DB s úzkym typovaním pre enumy =
 export interface DbGame extends DbGameRow {
   mode: GameMode;
-  scoringMode: ScoringMode;
-  visibilityMode: VisibilityMode;
   language: Language;
 }
 
