@@ -1,8 +1,9 @@
 // modules/game/components/modes/length-mode-client.tsx
 "use client";
 
+import { useEffect, useState } from "react";
 import { DbGame } from "@/types/game";
-import { useState } from "react";
+import { GAME_TIMERS } from "@/modules/game/config/constants";
 import { getLengthModeScore } from "@/modules/game/utils/scoring";
 import {
   normalizeWord,
@@ -15,6 +16,7 @@ import CurrentLetterCard from "@/modules/game/components/ui/current-letter-card"
 import ScoreDisplay from "@/modules/game/components/ui/score-display";
 import WordsUsedCard from "@/modules/game/components/ui/words-used-card";
 import GameInfoNote from "@/modules/game/components/ui/game-info-note";
+import TurnTimer from "../ui/turn-timer";
 
 interface LengthModeClientProps {
   game: DbGame;
@@ -36,9 +38,36 @@ const LengthModeClient = ({ game }: LengthModeClientProps) => {
   const [feedback, setFeedback] = useState<Feedback>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+
+  const [turnTimeLeft, setTurnTimeLeft] = useState<number>(GAME_TIMERS.DEFAULT_TURN_TIME);
+  const [isGameOver, setIsGameOver] = useState(false);
+
+  // Reset timer when a new word is accepted
+  useEffect(() => {
+    if (isGameOver) return;
+    setTurnTimeLeft(GAME_TIMERS.DEFAULT_TURN_TIME);
+  }, [wordsUsed.length, isGameOver]);
+
+  // Countdown effect
+  useEffect(() => {
+    if (isGameOver) return;
+
+    if (turnTimeLeft <= 0) {
+      setIsGameOver(true);
+      return;
+    }
+
+    const id = window.setInterval(() => {
+      setTurnTimeLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => window.clearInterval(id);
+  }, [turnTimeLeft, isGameOver]);
+
+  // --- word submit handler ---
   const handleSubmitWord = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!wordInput.trim() || isSubmitting) return;
+    if (!wordInput.trim() || isSubmitting || isGameOver) return;
 
     setIsSubmitting(true);
     setFeedback(null);
@@ -70,10 +99,32 @@ const LengthModeClient = ({ game }: LengthModeClientProps) => {
     setIsSubmitting(false);
   };
 
+  const wordCount = wordsUsed.length;
+
+  // GAME OVER
+  if (isGameOver) {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <ScoreDisplay score={score} />
+        <WordsUsedCard words={wordsUsed} />
+        <GameInfoNote>
+          Time&apos;s up! Final score: <strong>{score}</strong> points,{" "}
+          <strong>{wordCount}</strong>{" "}
+          {wordCount === 1 ? "word" : "words"}.
+        </GameInfoNote>
+      </div>
+    );
+  }
+
+  // ACTIVE GAME
   return (
     <div className="max-w-2xl mx-auto">
       <ScoreDisplay score={score} />
       <CurrentLetterCard letter={currentLetter} />
+      <TurnTimer
+        totalSeconds={GAME_TIMERS.DEFAULT_TURN_TIME}
+        remainingSeconds={turnTimeLeft}
+      />
       <WordInputForm
         currentLetter={currentLetter}
         wordInput={wordInput}
@@ -82,10 +133,10 @@ const LengthModeClient = ({ game }: LengthModeClientProps) => {
         isSubmitting={isSubmitting}
         feedback={feedback}
       />
+
       <WordsUsedCard words={wordsUsed} />
-      <GameInfoNote>
-        Longer words = more points (2^length)
-      </GameInfoNote>
+
+      <GameInfoNote>Longer words = more points (2^length)</GameInfoNote>
     </div>
   );
 };

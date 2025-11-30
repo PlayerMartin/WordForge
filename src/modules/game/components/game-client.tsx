@@ -48,7 +48,6 @@ const GameClient = ({ gameId }: GameClientProps) => {
     loadGame();
   }, [session.status, session.data?.user?.id, gameId]);
 
-  // Loading state
   if (session.status === "loading" || (!game && !error)) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -57,7 +56,6 @@ const GameClient = ({ gameId }: GameClientProps) => {
     );
   }
 
-  // Error state
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -73,11 +71,9 @@ const GameClient = ({ gameId }: GameClientProps) => {
   }
 
   if (!game) {
-    // Should not reach here, but just in case
     return null;
   }
 
-  // Switch by game.mode (stored in DB)
   switch (game.mode) {
     case "solo_length":
       return <LengthModeClient game={game} />;
@@ -90,21 +86,6 @@ const GameClient = ({ gameId }: GameClientProps) => {
 
     case "solo_hidden":
       return <HiddenModeClient game={game} />;
-
-    default:
-      return (
-        <div className="flex items-center justify-center min-h-screen">
-          <Card className="text-center max-w-md">
-            <h1 className="text-xl font-bold text-surface-900 mb-2">Unknown game mode</h1>
-            <p className="text-surface-500 mb-4">
-              This game was created with an unsupported mode.
-            </p>
-            <Link href="/">
-              <Button>Back to Home</Button>
-            </Link>
-          </Card>
-        </div>
-      );
   }
 };
 

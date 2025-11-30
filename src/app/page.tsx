@@ -1,13 +1,13 @@
 "use client";
 
-import { JoinGame, StartGameForMode } from "@/actions/gameActions";
+import { StartGameForMode } from "@/actions/gameActions";
 import { Button, Card } from "@/components/ui";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import GameModeSelector from "@/modules/game/components/game-mode-selector";
-import { GAME_MODES, GameModeId } from "@/modules/game/config/modes";
+import { GameModeId } from "@/modules/game/config/modes";
 
 const rules = [
   {

@@ -98,8 +98,6 @@ export const StartGameForMode = async (
     scoringMode: modeConfig.scoringMode,
     visibilityMode: modeConfig.visibilityMode,
     language,
-    turnTimeLimit: modeConfig.defaultTurnTimeLimit,
-    globalTimeLimit: modeConfig.defaultGlobalTimeLimit,
   };
 
   return await JoinGame(userId, settings);
