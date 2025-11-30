@@ -8,8 +8,8 @@ import ProfileHeaderActions from "@/modules/user/components/profile-header-actio
 import ProfileStatsSection from "@/modules/user/components/profile-stats-section";
 import ProfileStatsSkeleton from "@/modules/user/components/profile-stats-skeleton";
 import { authOptions } from "@/lib/auth/authOptions";
-import RecentGamesSkeleton from "@/modules/user/components/profile/recent-games-skeleton";
-import RecentGamesSection from "@/modules/user/components/profile/recent-games-section";
+import RecentGamesSkeleton from "@/modules/game/components/profile/recent-games-skeleton";
+import RecentGamesSection from "@/modules/game/components/profile/recent-games-section";
 
 
 export default async function ProfilePage() {
