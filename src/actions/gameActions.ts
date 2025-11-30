@@ -68,3 +68,7 @@ export const UpdateGameProgress = async (
 ) => {
   return await gameRepository.UpdateGameProgress(gameId, data);
 };
+
+export const GetActiveGameIdForUser = async (userId: string) => {
+  return await gameRepository.FindActiveGameByUserId(userId);
+};
