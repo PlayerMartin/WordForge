@@ -4,6 +4,11 @@ import { GameSettings } from "@/types";
 import { eq, and, isNull, desc  } from "drizzle-orm";
 import { LibsqlError } from "@libsql/client";
 
+type FinishGameData = {
+  score?: number;
+  wordsUsed?: string[];
+};
+
 export const CreateGame = async (userId: string, settings: GameSettings) => {
   const result = await db
     .insert(games)
@@ -19,11 +24,23 @@ export const CreateGame = async (userId: string, settings: GameSettings) => {
   return result[0].id;
 };
 
-export const FinishGame = async (gameId: string) => {
+export const FinishGame = async (gameId: string, data?: FinishGameData) => {
   try {
+    const updates: any = {
+      finishedAt: new Date(),
+    };
+
+    if (typeof data?.score === "number") {
+      updates.score = data.score;
+    }
+
+    if (data?.wordsUsed) {
+      updates.wordsUsed = data.wordsUsed;
+    }
+
     const result = await db
       .update(games)
-      .set({ finishedAt: new Date() })
+      .set(updates)
       .where(eq(games.id, gameId))
       .returning({ id: games.id });
 

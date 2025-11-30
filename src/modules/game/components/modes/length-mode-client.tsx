@@ -17,6 +17,7 @@ import ScoreDisplay from "@/modules/game/components/ui/score-display";
 import WordsUsedCard from "@/modules/game/components/ui/words-used-card";
 import GameInfoNote from "@/modules/game/components/ui/game-info-note";
 import TurnTimer from "../ui/turn-timer";
+import { FinishGame } from "@/actions/gameActions";
 
 interface LengthModeClientProps {
   game: DbGame;
@@ -63,6 +64,23 @@ const LengthModeClient = ({ game }: LengthModeClientProps) => {
 
     return () => window.clearInterval(id);
   }, [turnTimeLeft, isGameOver]);
+
+  useEffect(() => {
+    if (!isGameOver) return;
+
+    const persist = async () => {
+      try {
+        await FinishGame(game.id, {
+          score,
+          wordsUsed,
+        });
+      } catch (err) {
+        console.error("Failed to finish game", err);
+      }
+    };
+
+    void persist();
+  }, [isGameOver, game.id, score, wordsUsed]);
 
   // --- word submit handler ---
   const handleSubmitWord = async (e: React.FormEvent) => {

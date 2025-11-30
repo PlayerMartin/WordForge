@@ -1,7 +1,6 @@
 // modules/game/components/ui/game-header.tsx
 "use client";
 
-import { FinishGame } from "@/actions/gameActions";
 import { Button } from "@/components/ui";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -13,8 +12,7 @@ type GameHeaderProps = {
 const GameHeader = ({ gameId }: GameHeaderProps) => {
   const router = useRouter();
 
-  const leaveGame = async () => {
-    await FinishGame(gameId);
+  const leaveGame = () => {
     router.push("/");
   };
 
