@@ -5,6 +5,7 @@
 # Drizzle
 /drizzle/*
 dev.db
+*.db*
 
 # dependencies
 /node_modules
