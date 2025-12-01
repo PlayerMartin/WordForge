@@ -8,12 +8,6 @@
 export const GAME_TIMERS = {
   DEFAULT_TURN_TIME: 10,
   DEFAULT_GLOBAL_TIME: 300,
-
-  MIN_TURN_TIME: 7,
-  MAX_TURN_TIME: 15,
-
-  MIN_GLOBAL_TIME: 60,  
-  MAX_GLOBAL_TIME: 600,
 } as const;
 
 export const GAME_LIVES = {
