@@ -1,34 +1,13 @@
 // actions/gameActions.ts
 "use server";
 
-import {
-  GAME_MODE_BY_ID,
-  GameModeId,
-} from "@/modules/game/config/modes";
+import { GAME_MODE_BY_ID, GameModeId } from "@/modules/game/config/modes";
 import * as gameRepository from "@/modules/game/repositories/game-repository";
 import { GameSettings, Language } from "@/types";
 
 type FinishGameData = {
   score?: number;
   wordsUsed?: string[];
-};
-
-export const JoinGame = async (userId: string, settings: GameSettings) => {
-  const activeGameId = await gameRepository.FindActiveGameByUserId(userId);
-
-  if (activeGameId) {
-    const activeGame = await gameRepository.GetGame(activeGameId);
-
-    if (activeGame && activeGame.mode === settings.mode) {
-      return activeGameId;
-    }
-
-    if (activeGame) {
-      await gameRepository.FinishGame(activeGameId);
-    }
-  }
-
-  return await gameRepository.CreateGame(userId, settings);
 };
 
 export const FinishGame = async (gameId: string, data?: FinishGameData) => {
@@ -55,7 +34,7 @@ export const StartGameForMode = async (
     language,
   };
 
-  return await JoinGame(userId, settings);
+  return await gameRepository.CreateGame(userId, settings);
 };
 
 export const GetRecentGamesForUser = async (userId: string, limit = 10) => {
