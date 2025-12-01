@@ -12,8 +12,6 @@ import TempoModeClient from "./modes/tempo-mode-client";
 import HiddenModeClient from "./modes/hidden-mode-client";
 import ChallangeContainPartModeClient from "./modes/challange-contain-part-mode-client";
 
-
-
 interface GameClientProps {
   gameId: string;
 }
@@ -61,7 +59,9 @@ const GameClient = ({ gameId }: GameClientProps) => {
       <div className="flex items-center justify-center min-h-screen">
         <Card className="text-center max-w-md">
           <h1 className="text-xl font-bold text-surface-900 mb-2">{error}</h1>
-          <p className="text-surface-500 mb-4">Something went wrong with this game.</p>
+          <p className="text-surface-500 mb-4">
+            Something went wrong with this game.
+          </p>
           <Link href="/">
             <Button>Back to Home</Button>
           </Link>

@@ -4,9 +4,7 @@
 // ============================================
 
 import { games } from "@/lib/db/schema";
-import {
-  GameDbMode,
-} from "@/modules/game/config/modes";
+import { GameDbMode } from "@/modules/game/config/modes";
 import { LanguageCode } from "@/modules/game/config/constants";
 
 export type GameMode = GameDbMode;

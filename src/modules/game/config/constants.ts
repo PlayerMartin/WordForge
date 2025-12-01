@@ -12,7 +12,7 @@ export const GAME_TIMERS = {
   MIN_TURN_TIME: 7,
   MAX_TURN_TIME: 15,
 
-  MIN_GLOBAL_TIME: 60,  
+  MIN_GLOBAL_TIME: 60,
   MAX_GLOBAL_TIME: 600,
 } as const;
 
@@ -25,8 +25,8 @@ export const GAME_RULES = {
 } as const;
 
 export const GAME_SCORING = {
-  TEMPO_POINTS_PER_WORD: 1, 
-  LENGTH_DIVISOR: 3,   
+  TEMPO_POINTS_PER_WORD: 1,
+  LENGTH_DIVISOR: 3,
 } as const;
 
 export const SUPPORTED_LANGUAGES = {
