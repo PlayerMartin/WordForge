@@ -1,6 +1,6 @@
 // modules/game/core/engine.ts
 import { DbGame } from "@/types/game";
-import { getLengthModeScore } from "../utils/scoring";
+import { getScoreForWord } from "../utils/scoring";
 import { normalizeWord } from "../utils/validation";
 
 export type GameSnapshot = {
@@ -25,9 +25,13 @@ export const createSnapshotFromDb = (game: DbGame): GameSnapshot => {
   };
 };
 
-export const applyWord = (state: GameSnapshot, rawInput: string): GameSnapshot => {
+export const applyWord = (
+  state: GameSnapshot,
+  rawInput: string,
+  timeTaken?: number
+): GameSnapshot => {
   const word = normalizeWord(rawInput);
-  const newScore = state.score + getLengthModeScore(word);
+  const newScore = state.score + getScoreForWord(state.mode, word, timeTaken);
   const newWords = [...state.wordsUsed, word];
   const newLetter = word.slice(-1).toUpperCase();
 

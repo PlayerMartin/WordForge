@@ -1,31 +1,65 @@
-// modules/game/components/modes/tempo-mode-client.tsx
 "use client";
 
 import { DbGame } from "@/types/game";
-import { Button, Card } from "@/components/ui";
-import Link from "next/link";
+import ScoreDisplay from "../ui/score-display";
+import WordsUsedCard from "../ui/words-used-card";
+import GameInfoNote from "../ui/game-info-note";
+import CurrentLetterCard from "../ui/current-letter-card";
+import TurnTimer from "../ui/turn-timer";
+import { GAME_TIMERS } from "../../config/constants";
+import WordInputForm from "../forms/word-input-form";
+import { useTempoModeGame } from "../../hooks/use-tempo-mode-game";
 
 interface TempoModeClientProps {
   game: DbGame;
 }
 
 const TempoModeClient = ({ game }: TempoModeClientProps) => {
-  return (
-    <Card className="max-w-2xl mx-auto text-center">
-      <h1 className="text-2xl font-bold text-surface-900 mb-2">
-        Tempo Mode
-      </h1>
-      <p className="text-surface-500 mb-4">
-        We&apos;re still working on this mode.
-      </p>
-      <p className="text-surface-400 text-sm mb-6">
-        The game record exists, but gameplay for Tempo Mode isn&apos;t implemented yet.
-      </p>
-      <Link href="/">
-        <Button>Back to home</Button>
-      </Link>
-    </Card>
+  const {
+    snapshot,
+    wordInput,
+    setWordInput,
+    feedback,
+    isSubmitting,
+    turnTimeLeft,
+    isGameOver,
+    handleSubmitWord,
+  } = useTempoModeGame(game);
 
+  const wordCount = snapshot.wordsUsed.length;
+
+  if (isGameOver) {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <ScoreDisplay score={snapshot.score} />
+        <WordsUsedCard words={snapshot.wordsUsed} />
+        <GameInfoNote>
+          Time&apos;s up! Final score: <strong>{snapshot.score}</strong> points,{" "}
+          <strong>{wordCount}</strong> {wordCount === 1 ? "word" : "words"}.
+        </GameInfoNote>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-2xl mx-auto">
+      <ScoreDisplay score={snapshot.score} />
+      <CurrentLetterCard letter={snapshot.currentLetter} />
+      <TurnTimer
+        totalSeconds={GAME_TIMERS.DEFAULT_TURN_TIME}
+        remainingSeconds={turnTimeLeft}
+      />
+      <WordInputForm
+        currentLetter={snapshot.currentLetter}
+        wordInput={wordInput}
+        onWordChange={setWordInput}
+        onSubmit={handleSubmitWord}
+        isSubmitting={isSubmitting}
+        feedback={feedback}
+      />
+      <WordsUsedCard words={snapshot.wordsUsed} />
+      <GameInfoNote>The faster answer, the more points!</GameInfoNote>
+    </div>
   );
 };
 

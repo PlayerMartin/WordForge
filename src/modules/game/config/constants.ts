@@ -19,8 +19,8 @@ export const GAME_RULES = {
 } as const;
 
 export const GAME_SCORING = {
-  TEMPO_POINTS_PER_WORD: 1, 
-  LENGTH_DIVISOR: 3,   
+  TEMPO_POINTS_PER_WORD: 1,
+  LENGTH_DIVISOR: 3,
 } as const;
 
 export const SUPPORTED_LANGUAGES = {

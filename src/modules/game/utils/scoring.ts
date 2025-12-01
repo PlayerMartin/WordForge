@@ -1,6 +1,6 @@
 // modules/game/utils/scoring.ts
-import { GAME_SCORING } from "@/modules/game/config/constants";
-
+import { GAME_SCORING, GAME_TIMERS } from "@/modules/game/config/constants";
+import { GameMode } from "@/types";
 
 export const getLengthModeScore = (word: string): number => {
   const trimmed = word.trim();
@@ -10,7 +10,31 @@ export const getLengthModeScore = (word: string): number => {
   return Math.floor((length * length) / GAME_SCORING.LENGTH_DIVISOR);
 };
 
+export const getTempoModeScore = (timeTaken: number): number => {
+  return (
+    (GAME_TIMERS.DEFAULT_TURN_TIME - timeTaken) *
+    GAME_SCORING.TEMPO_POINTS_PER_WORD
+  );
+};
 
-export const getTempoModeScore = (params: {}): number => {
-  return GAME_SCORING.TEMPO_POINTS_PER_WORD;
+export const getScoreForWord = (
+  scoringMode: GameMode,
+  word: string,
+  timeTaken?: number
+): number => {
+  switch (scoringMode) {
+    case "solo_length":
+      return getLengthModeScore(word);
+    case "solo_tempo":
+      if (timeTaken !== undefined) {
+        return getTempoModeScore(timeTaken);
+      }
+      return -10000;
+    case "solo_hidden":
+    // TODO
+    case "solo_challenge_contain_part":
+    // TODO
+    default:
+      return 0;
+  }
 };

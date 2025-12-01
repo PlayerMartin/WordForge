@@ -1,55 +1,112 @@
-import { sqliteTable, text, integer, real, uniqueIndex, index, primaryKey } from "drizzle-orm/sqlite-core";
+import {
+  sqliteTable,
+  text,
+  integer,
+  real,
+  uniqueIndex,
+  index,
+  primaryKey,
+} from "drizzle-orm/sqlite-core";
 import { relations } from "drizzle-orm";
 
 // ============================================
 // AUTH MODELS
 // ============================================
 
-export const users = sqliteTable("users", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+export const users = sqliteTable("user", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   email: text("email").unique(),
-  emailVerified: integer("email_verified", { mode: "timestamp" }),
+  emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
   image: text("image"),
   password: text("password"),
   name: text("name").unique(),
-  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
-  updatedAt: integer("updated_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(
+    () => new Date()
+  ),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).$defaultFn(
+    () => new Date()
+  ),
 });
 
-export const accounts = sqliteTable("accounts", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
-  userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-  type: text("type").notNull(),
-  provider: text("provider").notNull(),
-  providerAccountId: text("provider_account_id").notNull(),
-  refresh_token: text("refresh_token"),
-  access_token: text("access_token"),
-  expires_at: integer("expires_at"),
-  token_type: text("token_type"),
-  scope: text("scope"),
-  id_token: text("id_token"),
-  session_state: text("session_state"),
+export const accounts = sqliteTable(
+  "account",
+  {
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: text("type").notNull(),
+    provider: text("provider").notNull(),
+    providerAccountId: text("providerAccountId").notNull(),
+    refresh_token: text("refresh_token"),
+    access_token: text("access_token"),
+    expires_at: integer("expires_at"),
+    token_type: text("token_type"),
+    scope: text("scope"),
+    id_token: text("id_token"),
+    session_state: text("session_state"),
+  },
+  (account) => [
+    primaryKey({
+      columns: [account.provider, account.providerAccountId],
+    }),
+  ]
+);
+
+export const sessions = sqliteTable("session", {
+  sessionToken: text("sessionToken").primaryKey(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
 });
 
-export const sessions = sqliteTable("sessions", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
-  sessionToken: text("session_token").notNull().unique(),
-  userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-  expires: integer("expires", { mode: "timestamp" }).notNull(),
-});
+export const verificationTokens = sqliteTable(
+  "verificationToken",
+  {
+    identifier: text("identifier").notNull(),
+    token: text("token").notNull(),
+    expires: integer("expires", { mode: "timestamp_ms" }).notNull(),
+  },
+  (verificationToken) => [
+    primaryKey({
+      columns: [verificationToken.identifier, verificationToken.token],
+    }),
+  ]
+);
 
-export const verificationTokens = sqliteTable("verification_tokens", {
-  identifier: text("identifier").notNull(),
-  token: text("token").notNull().unique(),
-  expires: integer("expires", { mode: "timestamp" }).notNull(),
-});
+export const authenticators = sqliteTable(
+  "authenticator",
+  {
+    credentialID: text("credentialID").notNull().unique(),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    providerAccountId: text("providerAccountId").notNull(),
+    credentialPublicKey: text("credentialPublicKey").notNull(),
+    counter: integer("counter").notNull(),
+    credentialDeviceType: text("credentialDeviceType").notNull(),
+    credentialBackedUp: integer("credentialBackedUp", {
+      mode: "boolean",
+    }).notNull(),
+    transports: text("transports"),
+  },
+  (authenticator) => [
+    primaryKey({
+      columns: [authenticator.userId, authenticator.credentialID],
+    }),
+  ]
+);
 
 // ============================================
 // GAME MODELS
 // ============================================
 
 export const games = sqliteTable("games", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   userId: text("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
@@ -58,9 +115,7 @@ export const games = sqliteTable("games", {
   language: text("language").notNull(),
 
   score: integer("score").notNull().default(0),
-  wordsUsed: text("words_used", { mode: "json" })
-    .$type<string[]>()
-    .default([]),
+  wordsUsed: text("words_used", { mode: "json" }).$type<string[]>().default([]),
 
   startedAt: integer("started_at", { mode: "timestamp" }).$defaultFn(
     () => new Date()
@@ -73,7 +128,9 @@ export const games = sqliteTable("games", {
 // ============================================
 
 export const words = sqliteTable("words", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   word: text("word").notNull(),
   language: text("language").notNull(),
   length: integer("length").notNull(),
@@ -85,8 +142,12 @@ export const words = sqliteTable("words", {
 // ============================================
 
 export const leaderboardEntries = sqliteTable("leaderboard_entries", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
-  userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
 
   mode: text("mode").notNull(),
   language: text("language").notNull(),
@@ -95,7 +156,9 @@ export const leaderboardEntries = sqliteTable("leaderboard_entries", {
   score: integer("score").notNull(),
   wordCount: integer("word_count").notNull(),
   longestWord: text("longest_word"),
-  achievedAt: integer("achieved_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  achievedAt: integer("achieved_at", { mode: "timestamp" }).$defaultFn(
+    () => new Date()
+  ),
 });
 
 // ============================================
@@ -103,8 +166,12 @@ export const leaderboardEntries = sqliteTable("leaderboard_entries", {
 // ============================================
 
 export const userStats = sqliteTable("user_stats", {
-  id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
-  userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
 
   // Stats per language
   language: text("language").notNull(),
@@ -119,7 +186,9 @@ export const userStats = sqliteTable("user_stats", {
   averageWpm: real("average_wpm").notNull().default(0),
   averageAccuracy: real("average_accuracy").notNull().default(0),
 
-  updatedAt: integer("updated_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).$defaultFn(
+    () => new Date()
+  ),
 });
 
 // ============================================
@@ -155,12 +224,15 @@ export const gamesRelations = relations(games, ({ one }) => ({
   }),
 }));
 
-export const leaderboardEntriesRelations = relations(leaderboardEntries, ({ one }) => ({
-  user: one(users, {
-    fields: [leaderboardEntries.userId],
-    references: [users.id],
-  }),
-}));
+export const leaderboardEntriesRelations = relations(
+  leaderboardEntries,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [leaderboardEntries.userId],
+      references: [users.id],
+    }),
+  })
+);
 
 export const userStatsRelations = relations(userStats, ({ one }) => ({
   user: one(users, {
