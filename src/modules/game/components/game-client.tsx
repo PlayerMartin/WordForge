@@ -9,8 +9,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import LengthModeClient from "./modes/length-mode-client";
 import TempoModeClient from "./modes/tempo-mode-client";
-import OpenModeClient from "./modes/open-mode-client";
 import HiddenModeClient from "./modes/hidden-mode-client";
+import ChallangeContainPartModeClient from "./modes/challange-contain-part-mode-client";
 
 
 
@@ -81,8 +81,8 @@ const GameClient = ({ gameId }: GameClientProps) => {
     case "solo_tempo":
       return <TempoModeClient game={game} />;
 
-    case "solo_open":
-      return <OpenModeClient game={game} />;
+    case "solo_challenge_contain_part":
+      return <ChallangeContainPartModeClient game={game} />;
 
     case "solo_hidden":
       return <HiddenModeClient game={game} />;

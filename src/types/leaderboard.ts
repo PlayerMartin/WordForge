@@ -4,14 +4,12 @@
 //
 // Sem patria typy pre rebríčky a filtre
 
-import { Language, GameMode, ScoringMode, VisibilityMode } from './game'
+import { Language, GameMode } from './game'
 import { PublicUserProfile } from './user'
 
 // = Filter pre rebríček =
 export interface LeaderboardFilter {
   mode: GameMode
-  scoringMode: ScoringMode
-  visibilityMode: VisibilityMode
   language: Language
 }
 
