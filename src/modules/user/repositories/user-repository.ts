@@ -1,7 +1,6 @@
 import { db, users } from "@/lib/db";
 import { User } from "@/types";
-import { eq } from "drizzle-orm";
-import { LibsqlError } from "@libsql/client";
+import { DrizzleQueryError, eq } from "drizzle-orm";
 
 export const CreateUser = async (user: User) => {
   try {
@@ -12,13 +11,14 @@ export const CreateUser = async (user: User) => {
     });
     return { ok: true };
   } catch (error: unknown) {
-    if (error instanceof LibsqlError) {
+    if (error instanceof DrizzleQueryError) {
+      const msg = error.cause?.message.toLowerCase();
       //unique constraint violation
-      if (error.code === "SQLITE_CONSTRAINT_UNIQUE") {
-        if (error.message.includes("name")) {
+      if (msg?.startsWith("sqlite_constraint") && msg?.includes("unique")) {
+        if (msg.includes("name")) {
           return { ok: false, err: "Username taken" };
         }
-        if (error.message.includes("email")) {
+        if (msg.includes("email")) {
           return { ok: false, err: "Email already in use." };
         }
       }
