@@ -4,9 +4,9 @@
 import { useEffect, useState } from "react";
 
 type UseTurnTimerOptions = {
-  durationSeconds: number; 
-  isRunning: boolean;  
-  onExpire?: () => void | Promise<void>; 
+  durationSeconds: number;
+  isRunning: boolean;
+  onExpire?: () => void | Promise<void>;
 };
 
 export const useTurnTimer = ({
@@ -22,21 +22,19 @@ export const useTurnTimer = ({
 
   useEffect(() => {
     if (!isRunning) return;
-    if (durationSeconds <= 0) return;
 
-    if (remainingSeconds <= 0) {
-      if (onExpire) {
-        void onExpire();
-      }
-      return;
-    }
-
-    const id = window.setInterval(() => {
+    const id = setInterval(() => {
       setRemainingSeconds((prev) => prev - 1);
     }, 1000);
 
-    return () => window.clearInterval(id);
-  }, [isRunning, durationSeconds, remainingSeconds, onExpire]);
+    return () => clearInterval(id);
+  }, [isRunning]);
+
+  useEffect(() => {
+    if (remainingSeconds === 0 && isRunning) {
+      onExpire?.();
+    }
+  }, [remainingSeconds, isRunning, onExpire]);
 
   const reset = () => setRemainingSeconds(durationSeconds);
 
