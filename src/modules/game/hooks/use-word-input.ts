@@ -17,6 +17,7 @@ type UseWordInputOptions = {
 
 export const useWordInput = ({
   currentLetter,
+  language,
   usedWords,
   canSubmit,
   onValidWord,
@@ -49,7 +50,7 @@ export const useWordInput = ({
     }
 
     const apiRes = await wordCheckMutation.mutateAsync({
-      language: "en",
+      language: language,
       word: wordInput,
     });
 
