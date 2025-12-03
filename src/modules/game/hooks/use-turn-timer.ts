@@ -9,7 +9,7 @@ type UseTurnTimerOptions = {
   onExpire?: () => void | Promise<void>;
 };
 
-export const useTurnTimer = ({
+export const useTimer = ({
   durationSeconds,
   isRunning,
   onExpire,

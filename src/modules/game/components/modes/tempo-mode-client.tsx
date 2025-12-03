@@ -5,10 +5,10 @@ import ScoreDisplay from "../ui/score-display";
 import WordsUsedCard from "../ui/words-used-card";
 import GameInfoNote from "../ui/game-info-note";
 import CurrentLetterCard from "../ui/current-letter-card";
-import TurnTimer from "../ui/turn-timer";
 import { GAME_TIMERS } from "../../config/constants";
 import WordInputForm from "../forms/word-input-form";
 import { useTempoModeGame } from "../../hooks/use-tempo-mode-game";
+import Timer from "../ui/timer";
 
 interface TempoModeClientProps {
   game: DbGame;
@@ -22,6 +22,7 @@ const TempoModeClient = ({ game }: TempoModeClientProps) => {
     feedback,
     isSubmitting,
     turnTimeLeft,
+    gameTimeLeft,
     isGameOver,
     handleSubmitWord,
   } = useTempoModeGame(game);
@@ -43,12 +44,19 @@ const TempoModeClient = ({ game }: TempoModeClientProps) => {
 
   return (
     <div className="max-w-2xl mx-auto">
+      <Timer
+        totalSeconds={GAME_TIMERS.DEFAULT_GAME_TIME}
+        remainingSeconds={gameTimeLeft}
+      />
+
       <ScoreDisplay score={snapshot.score} />
       <CurrentLetterCard letter={snapshot.currentLetter} />
-      <TurnTimer
+
+      <Timer
         totalSeconds={GAME_TIMERS.DEFAULT_TURN_TIME}
         remainingSeconds={turnTimeLeft}
       />
+
       <WordInputForm
         currentLetter={snapshot.currentLetter}
         wordInput={wordInput}
