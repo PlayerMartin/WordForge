@@ -4,9 +4,12 @@
 import { useState } from "react";
 import { validateWordLocally } from "@/modules/game/utils/validation";
 import type { Feedback } from "@/modules/game/components/forms/word-input-form";
+import { useCheckWord } from "./use-validation";
+import { Language } from "@/types";
 
 type UseWordInputOptions = {
   currentLetter: string;
+  language: Language;
   usedWords: string[];
   canSubmit: boolean;
   onValidWord: (rawInput: string) => Promise<void> | void;
@@ -21,6 +24,7 @@ export const useWordInput = ({
   const [wordInput, setWordInput] = useState("");
   const [feedback, setFeedback] = useState<Feedback>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const wordCheckMutation = useCheckWord();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,16 +33,30 @@ export const useWordInput = ({
     setIsSubmitting(true);
     setFeedback(null);
 
-    const result = validateWordLocally({
+    const localRes = validateWordLocally({
       rawInput: wordInput,
       requiredLetter: currentLetter,
       usedWords,
     });
 
-    if (!result.valid) {
+    if (!localRes.valid) {
       setFeedback({
         type: "error",
-        message: result.message ?? "Invalid word",
+        message: localRes.message ?? "Invalid word",
+      });
+      setIsSubmitting(false);
+      return;
+    }
+
+    const apiRes = await wordCheckMutation.mutateAsync({
+      language: "en",
+      word: wordInput,
+    });
+
+    if (!apiRes.ok) {
+      setFeedback({
+        type: "error",
+        message: apiRes.msg ?? "Error",
       });
       setIsSubmitting(false);
       return;
@@ -57,7 +75,7 @@ export const useWordInput = ({
     wordInput,
     setWordInput,
     feedback,
-    setFeedback,     // ✅ expose setter so caller can set success message
+    setFeedback,
     isSubmitting,
     handleSubmit,
   };

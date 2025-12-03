@@ -8,7 +8,7 @@ export const normalizeWord = (input: string): string =>
 export const validateWordLocally = (params: {
   rawInput: string;
   requiredLetter: string;
-  usedWords: string[]; 
+  usedWords: string[];
 }): WordValidationResult => {
   const normalized = normalizeWord(params.rawInput);
 

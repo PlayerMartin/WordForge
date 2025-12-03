@@ -1,11 +1,12 @@
 // modules/game/core/engine.ts
-import { DbGame } from "@/types/game";
+import { DbGame, Language } from "@/types/game";
 import { getScoreForWord } from "../utils/scoring";
 import { normalizeWord } from "../utils/validation";
 
 export type GameSnapshot = {
   id: string;
   mode: DbGame["mode"];
+  language: Language;
   score: number;
   wordsUsed: string[];
   currentLetter: string;
@@ -19,6 +20,7 @@ export const createSnapshotFromDb = (game: DbGame): GameSnapshot => {
   return {
     id: game.id,
     mode: game.mode,
+    language: game.language,
     score: game.score ?? 0,
     wordsUsed: words,
     currentLetter,
