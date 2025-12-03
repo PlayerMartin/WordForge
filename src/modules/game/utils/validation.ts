@@ -8,7 +8,7 @@ export const normalizeWord = (input: string): string =>
 export const validateWordLocally = (params: {
   rawInput: string;
   requiredLetter: string;
-  usedWords: string[]; 
+  usedWords: string[];
 }): WordValidationResult => {
   const normalized = normalizeWord(params.rawInput);
 
@@ -17,6 +17,14 @@ export const validateWordLocally = (params: {
       valid: false,
       error: "too_short",
       message: "Please enter a word.",
+    };
+  }
+
+  if (normalized.split(/\s+/).length > 1) {
+    return {
+      valid: false,
+      error: "many_words",
+      message: "Please enter a single word",
     };
   }
 

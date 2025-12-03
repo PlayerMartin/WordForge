@@ -75,6 +75,11 @@ export interface GameResults {
 // = Validačný výsledok =
 export interface WordValidationResult {
   valid: boolean;
-  error?: "wrong_letter" | "not_in_dictionary" | "already_used" | "too_short";
+  error?:
+    | "wrong_letter"
+    | "not_in_dictionary"
+    | "already_used"
+    | "too_short"
+    | "many_words";
   message?: string;
 }
