@@ -20,13 +20,7 @@ export const useLengthModeGame = (game: DbGame) => {
   );
 
   // === game end ===
-  const { isGameOver, isFinishing, endGame } = useGameEnd({
-    gameId: game.id,
-    getPayload: () => ({
-      score: snapshot.score,
-      wordsUsed: snapshot.wordsUsed,
-    }),
-  });
+  const { isGameOver, isFinishing, endGame } = useGameEnd({ gameId: game.id });
 
   // === turn timer ===
   const { remainingSeconds: turnTimeLeft, reset: resetTurnTimer } = useTimer({

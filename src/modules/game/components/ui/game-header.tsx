@@ -4,16 +4,15 @@
 import { Button } from "@/components/ui";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useGameEnd } from "../../hooks/use-game-end";
 
-type GameHeaderProps = {
-  gameId: string;
-};
-
-const GameHeader = ({ gameId }: GameHeaderProps) => {
+const GameHeader = ({ gameId }: { gameId: string }) => {
   const router = useRouter();
+  const { endGame } = useGameEnd({ gameId });
 
   const leaveGame = () => {
-    router.push("/");
+    endGame();
+    router.replace("/");
   };
 
   return (

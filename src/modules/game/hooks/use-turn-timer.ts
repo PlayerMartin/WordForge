@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 type UseTurnTimerOptions = {
   durationSeconds: number;
   isRunning: boolean;
-  onExpire?: () => void | Promise<void>;
+  onExpire?: () => void;
 };
 
 export const useTimer = ({
