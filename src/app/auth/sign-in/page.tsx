@@ -53,7 +53,7 @@ const SignInPage = () => {
 					<p className="mt-6 text-center text-sm text-surface-500">
 						Don&apos;t have an account?{' '}
 						<Link
-							href="/auth/signup"
+							href="/auth/sign-up"
 							className="font-medium text-primary-600 transition-colors hover:text-primary-500"
 						>
 							Sign up

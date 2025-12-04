@@ -31,7 +31,7 @@ export const OAuthSection = ({
 	const onClick = async (provider: ClientSafeProvider) => {
 		setIsLoading(true);
 		await signIn(provider.id, { callbackUrl: '/' });
-		// setIsLoading(false);
+		setIsLoading(false);
 	};
 
 	return (
