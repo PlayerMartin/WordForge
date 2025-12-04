@@ -20,7 +20,7 @@ export const AuthFormInput = ({
 		formState: { errors }
 	} = useFormContext();
 
-	const fieldError = errors[label];
+	const fieldError = errors[name];
 
 	return (
 		<Input

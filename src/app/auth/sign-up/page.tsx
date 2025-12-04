@@ -1,49 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 
-import { SignUp } from '@/actions/auth-actions';
-import { type UserSignupData, userSignupSchema } from '@/types';
-import { Button, Card, Input } from '@/components/ui';
+import { Card } from '@/components/ui';
+import { SignUpForm } from '@/modules/auth/components/sign-up-form';
 
 const SignUpPage = () => {
-	const router = useRouter();
 	const [error, setError] = useState<string | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
-
-	const {
-		register,
-		handleSubmit,
-		formState: { errors }
-	} = useForm<UserSignupData>({
-		resolver: zodResolver(userSignupSchema)
-	});
-
-	const onSubmit = async (data: UserSignupData) => {
-		setError(null);
-		setIsLoading(true);
-
-		try {
-			const res = await SignUp({
-				name: data.name,
-				email: data.email,
-				password: data.password
-			});
-
-			if (!res.ok) {
-				setError(res.err ?? 'Something went wrong. Please try again.');
-				return;
-			}
-
-			router.push('/auth/sign-in');
-		} finally {
-			setIsLoading(false);
-		}
-	};
 
 	return (
 		<div className="flex items-center justify-center p-4">
@@ -64,51 +28,7 @@ const SignUpPage = () => {
 						</div>
 					)}
 
-					<form
-						onSubmit={handleSubmit(onSubmit)}
-						className="space-y-4"
-					>
-						<Input
-							label="Username"
-							placeholder="Choose a username"
-							error={errors.name?.message}
-							{...register('name')}
-						/>
-
-						<Input
-							label="Email"
-							type="email"
-							placeholder="Enter your email"
-							error={errors.email?.message}
-							{...register('email')}
-						/>
-
-						<Input
-							label="Password"
-							type="password"
-							placeholder="Create a password"
-							error={errors.password?.message}
-							{...register('password')}
-						/>
-
-						<Input
-							label="Confirm Password"
-							type="password"
-							placeholder="Confirm your password"
-							error={errors.password2?.message}
-							{...register('password2')}
-						/>
-
-						<Button
-							type="submit"
-							fullWidth
-							size="lg"
-							loading={isLoading}
-							className="mt-6"
-						>
-							Create Account
-						</Button>
-					</form>
+					<SignUpForm setError={setError} />
 
 					<p className="mt-6 text-center text-sm text-surface-500">
 						Already have an account?{' '}
