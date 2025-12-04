@@ -11,7 +11,7 @@ import {
 } from '@/modules/game/core/engine';
 import { UpdateGameProgress } from '@/actions/game-actions';
 
-import { useTimer } from './use-turn-timer';
+import { useTimer } from './use-timer';
 import { useGameEnd } from './use-game-end';
 import { useWordInput } from './use-word-input';
 

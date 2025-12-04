@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-type UseTurnTimerOptions = {
+type UseTimerOptions = {
 	durationSeconds: number;
 	isRunning: boolean;
 	onExpire?: () => void;
@@ -12,7 +12,7 @@ export const useTimer = ({
 	durationSeconds,
 	isRunning,
 	onExpire
-}: UseTurnTimerOptions) => {
+}: UseTimerOptions) => {
 	const [remainingSeconds, setRemainingSeconds] = useState(durationSeconds);
 
 	useEffect(() => {
