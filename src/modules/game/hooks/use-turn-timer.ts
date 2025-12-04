@@ -1,45 +1,44 @@
-// modules/game/hooks/use-turn-timer.ts
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 type UseTurnTimerOptions = {
-  durationSeconds: number;
-  isRunning: boolean;
-  onExpire?: () => void;
+	durationSeconds: number;
+	isRunning: boolean;
+	onExpire?: () => void;
 };
 
 export const useTimer = ({
-  durationSeconds,
-  isRunning,
-  onExpire,
+	durationSeconds,
+	isRunning,
+	onExpire
 }: UseTurnTimerOptions) => {
-  const [remainingSeconds, setRemainingSeconds] = useState(durationSeconds);
+	const [remainingSeconds, setRemainingSeconds] = useState(durationSeconds);
 
-  useEffect(() => {
-    setRemainingSeconds(durationSeconds);
-  }, [durationSeconds]);
+	useEffect(() => {
+		setRemainingSeconds(durationSeconds);
+	}, [durationSeconds]);
 
-  useEffect(() => {
-    if (!isRunning) return;
+	useEffect(() => {
+		if (!isRunning) return;
 
-    const id = setInterval(() => {
-      setRemainingSeconds((prev) => prev - 1);
-    }, 1000);
+		const id = setInterval(() => {
+			setRemainingSeconds(prev => prev - 1);
+		}, 1000);
 
-    return () => clearInterval(id);
-  }, [isRunning]);
+		return () => clearInterval(id);
+	}, [isRunning]);
 
-  useEffect(() => {
-    if (remainingSeconds === 0 && isRunning) {
-      onExpire?.();
-    }
-  }, [remainingSeconds, isRunning, onExpire]);
+	useEffect(() => {
+		if (remainingSeconds === 0 && isRunning) {
+			onExpire?.();
+		}
+	}, [remainingSeconds, isRunning, onExpire]);
 
-  const reset = () => setRemainingSeconds(durationSeconds);
+	const reset = () => setRemainingSeconds(durationSeconds);
 
-  return {
-    remainingSeconds,
-    reset,
-  };
+	return {
+		remainingSeconds,
+		reset
+	};
 };

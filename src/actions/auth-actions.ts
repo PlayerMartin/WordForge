@@ -1,0 +1,12 @@
+'use server';
+
+import bcrypt from 'bcryptjs';
+
+import * as userRepository from '@/modules/user/repositories/user-repository';
+import { type User } from '@/types';
+
+export const SignUp = async (user: User) => {
+	const hash = await bcrypt.hash(user.password, 10);
+
+	return await userRepository.CreateUser({ ...user, password: hash });
+};

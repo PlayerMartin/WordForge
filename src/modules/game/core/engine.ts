@@ -1,46 +1,46 @@
-// modules/game/core/engine.ts
-import { DbGame, Language } from "@/types/game";
-import { getScoreForWord } from "../utils/scoring";
-import { normalizeWord } from "../utils/validation";
+import { type DbGame, type Language } from '@/types/game';
+
+import { getScoreForWord } from '../utils/scoring';
+import { normalizeWord } from '../utils/validation';
 
 export type GameSnapshot = {
-  id: string;
-  mode: DbGame["mode"];
-  language: Language;
-  score: number;
-  wordsUsed: string[];
-  currentLetter: string;
+	id: string;
+	mode: DbGame['mode'];
+	language: Language;
+	score: number;
+	wordsUsed: string[];
+	currentLetter: string;
 };
 
 export const createSnapshotFromDb = (game: DbGame): GameSnapshot => {
-  const words = Array.isArray(game.wordsUsed) ? game.wordsUsed : [];
-  const last = words[words.length - 1];
-  const currentLetter = last ? last.slice(-1).toUpperCase() : "A";
+	const words = Array.isArray(game.wordsUsed) ? game.wordsUsed : [];
+	const last = words[words.length - 1];
+	const currentLetter = last ? last.slice(-1).toUpperCase() : 'A';
 
-  return {
-    id: game.id,
-    mode: game.mode,
-    language: game.language,
-    score: game.score ?? 0,
-    wordsUsed: words,
-    currentLetter,
-  };
+	return {
+		id: game.id,
+		mode: game.mode,
+		language: game.language,
+		score: game.score ?? 0,
+		wordsUsed: words,
+		currentLetter
+	};
 };
 
 export const applyWord = (
-  state: GameSnapshot,
-  rawInput: string,
-  timeTaken?: number
+	state: GameSnapshot,
+	rawInput: string,
+	timeTaken?: number
 ): GameSnapshot => {
-  const word = normalizeWord(rawInput);
-  const newScore = state.score + getScoreForWord(state.mode, word, timeTaken);
-  const newWords = [...state.wordsUsed, word];
-  const newLetter = word.slice(-1).toUpperCase();
+	const word = normalizeWord(rawInput);
+	const newScore = state.score + getScoreForWord(state.mode, word, timeTaken);
+	const newWords = [...state.wordsUsed, word];
+	const newLetter = word.slice(-1).toUpperCase();
 
-  return {
-    ...state,
-    score: newScore,
-    wordsUsed: newWords,
-    currentLetter: newLetter,
-  };
+	return {
+		...state,
+		score: newScore,
+		wordsUsed: newWords,
+		currentLetter: newLetter
+	};
 };

@@ -1,13 +1,9 @@
-import GameClient from "@/modules/game/components/game-client";
+import GameClient from '@/modules/game/components/game-client';
 
 type PageProps = {
-  params: { id: string };
+	params: { id: string };
 };
 
-const Game = ({ params }: PageProps) => {
-  const gameId = params.id;
-
-  return <GameClient gameId={gameId} />;
-};
+const Game = ({ params }: PageProps) => <GameClient gameId={params.id} />;
 
 export default Game;

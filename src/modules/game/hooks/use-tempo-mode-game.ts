@@ -1,94 +1,98 @@
-"use client";
+'use client';
 
-import { useState, useMemo } from "react";
-import { DbGame } from "@/types/game";
-import { GAME_TIMERS } from "@/modules/game/config/constants";
+import { useState, useMemo } from 'react';
+
+import { type DbGame } from '@/types/game';
+import { GAME_TIMERS } from '@/modules/game/config/constants';
 import {
-  GameSnapshot,
-  createSnapshotFromDb,
-  applyWord,
-} from "@/modules/game/core/engine";
-import { UpdateGameProgress } from "@/actions/gameActions";
-import { useTimer as useTimer } from "./use-turn-timer";
-import { useGameEnd } from "./use-game-end";
-import { useWordInput } from "./use-word-input";
+	type GameSnapshot,
+	createSnapshotFromDb,
+	applyWord
+} from '@/modules/game/core/engine';
+import { UpdateGameProgress } from '@/actions/game-actions';
+
+import { useTimer } from './use-turn-timer';
+import { useGameEnd } from './use-game-end';
+import { useWordInput } from './use-word-input';
 
 export const useTempoModeGame = (game: DbGame) => {
-  const [snapshot, setSnapshot] = useState<GameSnapshot>(() =>
-    createSnapshotFromDb(game)
-  );
+	const [snapshot, setSnapshot] = useState<GameSnapshot>(() =>
+		createSnapshotFromDb(game)
+	);
 
-  // === game end ===
-  const { isGameOver, isFinishing, endGame } = useGameEnd({ gameId: game.id });
+	// === game end ===
+	const { isGameOver, isFinishing, endGame } = useGameEnd({
+		gameId: game.id
+	});
 
-  // === turn timer ===
-  const { remainingSeconds: turnTimeLeft, reset: resetTurnTimer } = useTimer({
-    durationSeconds: GAME_TIMERS.DEFAULT_TURN_TIME,
-    isRunning: !isGameOver,
-    onExpire: endGame,
-  });
-  // === game timer ===
-  const { remainingSeconds: gameTimeLeft } = useTimer({
-    durationSeconds: GAME_TIMERS.DEFAULT_GAME_TIME,
-    isRunning: !isGameOver,
-    onExpire: endGame,
-  });
+	// === turn timer ===
+	const { remainingSeconds: turnTimeLeft, reset: resetTurnTimer } = useTimer({
+		durationSeconds: GAME_TIMERS.DEFAULT_TURN_TIME,
+		isRunning: !isGameOver,
+		onExpire: endGame
+	});
+	// === game timer ===
+	const { remainingSeconds: gameTimeLeft } = useTimer({
+		durationSeconds: GAME_TIMERS.DEFAULT_GAME_TIME,
+		isRunning: !isGameOver,
+		onExpire: endGame
+	});
 
-  // === word input UX ===
-  const {
-    wordInput,
-    setWordInput,
-    feedback,
-    setFeedback,
-    isSubmitting,
-    handleSubmit,
-  } = useWordInput({
-    currentLetter: snapshot.currentLetter,
-    language: snapshot.language,
-    usedWords: snapshot.wordsUsed,
-    canSubmit: !isGameOver && !isFinishing,
-    onValidWord: async (rawInput) => {
-      const before = snapshot.score;
-      const next = applyWord(
-        snapshot,
-        rawInput,
-        GAME_TIMERS.DEFAULT_TURN_TIME - turnTimeLeft
-      );
-      const gained = next.score - before;
+	// === word input UX ===
+	const {
+		wordInput,
+		setWordInput,
+		feedback,
+		setFeedback,
+		isSubmitting,
+		handleSubmit
+	} = useWordInput({
+		currentLetter: snapshot.currentLetter,
+		language: snapshot.language,
+		usedWords: snapshot.wordsUsed,
+		canSubmit: !isGameOver && !isFinishing,
+		onValidWord: async rawInput => {
+			const before = snapshot.score;
+			const next = applyWord(
+				snapshot,
+				rawInput,
+				GAME_TIMERS.DEFAULT_TURN_TIME - turnTimeLeft
+			);
+			const gained = next.score - before;
 
-      setSnapshot(next);
-      resetTurnTimer();
+			setSnapshot(next);
+			resetTurnTimer();
 
-      setFeedback({
-        type: "success",
-        message: `+${gained} points!`,
-      });
+			setFeedback({
+				type: 'success',
+				message: `+${gained} points!`
+			});
 
-      try {
-        await UpdateGameProgress(game.id, {
-          score: next.score,
-          wordsUsed: next.wordsUsed,
-        });
-      } catch (err) {
-        console.error("Failed to sync game progress", err);
-      }
-    },
-  });
+			try {
+				await UpdateGameProgress(game.id, {
+					score: next.score,
+					wordsUsed: next.wordsUsed
+				});
+			} catch (err) {
+				console.error('Failed to sync game progress', err);
+			}
+		}
+	});
 
-  const isBusy = useMemo(
-    () => isSubmitting || isFinishing,
-    [isSubmitting, isFinishing]
-  );
+	const isBusy = useMemo(
+		() => isSubmitting || isFinishing,
+		[isSubmitting, isFinishing]
+	);
 
-  return {
-    snapshot,
-    wordInput,
-    setWordInput,
-    feedback,
-    isSubmitting: isBusy,
-    turnTimeLeft,
-    gameTimeLeft,
-    isGameOver,
-    handleSubmitWord: handleSubmit,
-  };
+	return {
+		snapshot,
+		wordInput,
+		setWordInput,
+		feedback,
+		isSubmitting: isBusy,
+		turnTimeLeft,
+		gameTimeLeft,
+		isGameOver,
+		handleSubmitWord: handleSubmit
+	};
 };
