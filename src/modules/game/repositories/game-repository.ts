@@ -1,7 +1,7 @@
 // modules/game/repositories/game-repository.ts
 import { db, games } from "@/lib/db";
 import { GameSettings } from "@/types";
-import { eq, and, isNull, desc  } from "drizzle-orm";
+import { eq, and, isNull, desc } from "drizzle-orm";
 import { LibsqlError } from "@libsql/client";
 
 type FinishGameData = {
@@ -24,23 +24,11 @@ export const CreateGame = async (userId: string, settings: GameSettings) => {
   return result[0].id;
 };
 
-export const FinishGame = async (gameId: string, data?: FinishGameData) => {
+export const FinishGame = async (gameId: string) => {
   try {
-    const updates: any = {
-      finishedAt: new Date(),
-    };
-
-    if (typeof data?.score === "number") {
-      updates.score = data.score;
-    }
-
-    if (data?.wordsUsed) {
-      updates.wordsUsed = data.wordsUsed;
-    }
-
     const result = await db
       .update(games)
-      .set(updates)
+      .set({ finishedAt: new Date() })
       .where(eq(games.id, gameId))
       .returning({ id: games.id });
 

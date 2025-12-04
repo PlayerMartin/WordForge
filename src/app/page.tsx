@@ -1,6 +1,6 @@
 "use client";
 
-import { StartGameForMode, GetActiveGameIdForUser } from "@/actions/gameActions";
+import { StartGameForMode } from "@/actions/gameActions";
 import { Button, Card } from "@/components/ui";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
@@ -16,19 +16,6 @@ const Home = () => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [selectedModeId, setSelectedModeId] = useState<GameModeId>("length");
-
-  const [activeGameId, setActiveGameId] = useState<string | null>(null);
-  const [isLoadingActiveGame, setIsLoadingActiveGame] = useState(false);
-
-  // load active game once user is known
-  useEffect(() => {
-    if (session.status !== "authenticated" || !session.data?.user?.id) return;
-
-    setIsLoadingActiveGame(true);
-    GetActiveGameIdForUser(session.data.user.id)
-      .then((id) => setActiveGameId(id))
-      .finally(() => setIsLoadingActiveGame(false));
-  }, [session.status, session.data?.user?.id]);
 
   const handleStartGame = async () => {
     if (!session.data?.user.id) {
@@ -48,11 +35,6 @@ const Home = () => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleContinueGame = () => {
-    if (!activeGameId) return;
-    router.push(`/game/${activeGameId}`);
   };
 
   // --- render ---
@@ -99,20 +81,13 @@ const Home = () => {
             </span>
           </h1>
           <p className="text-xl text-surface-600 mb-8">
-            A fast-paced word chain game. Start with a letter, type a word,
-            and the last letter becomes the next challenge. Race against time!
+            A fast-paced word chain game. Start with a letter, type a word, and
+            the last letter becomes the next challenge. Race against time!
           </p>
 
           {/* CTA area – difference between start vs continue */}
-          {session.status === "authenticated" && activeGameId ? (
+          {session.status === "authenticated" ? (
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-              <Button
-                size="lg"
-                onClick={handleContinueGame}
-                loading={isLoadingActiveGame}
-              >
-                Continue Game
-              </Button>
               <Button
                 size="lg"
                 variant="outline"
@@ -148,41 +123,59 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Languagess */} 
-        <div className="max-w-2xl mx-auto text-center"> 
-          <h2 className="text-2xl font-bold text-surface-900 mb-6"> Multiple Languages </h2> 
-          <div className="flex justify-center gap-4"> 
-            <Card padding="sm" className="px-6 border-2 border-primary-500 bg-surface-900"> 
-              <span className="text-primary-400 font-bold mr-2">EN</span> 
-              <span className="font-medium text-white">English</span> 
-            </Card> 
-            <Card padding="sm" className="px-6 opacity-50 bg-surface-900"> 
-              <span className="text-primary-400 font-bold mr-2">CZ</span> 
-              <span className="font-medium text-white">Czech</span> 
-              <span className="block text-xs text-surface-400">Coming soon</span> 
-            </Card> <Card padding="sm" className="px-6 opacity-50 bg-surface-900"> 
-              <span className="text-primary-400 font-bold mr-2">SK</span> 
-              <span className="font-medium text-white">Slovak</span> 
-              <span className="block text-xs text-surface-400">Coming soon</span> 
-            </Card> 
-          </div> 
-        </div> 
-      </main> 
-      {/* Foter */} 
-      <footer className="container mx-auto px-4 py-8 mt-16 border-t border-surface-200"> 
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-surface-500"> 
-          <div>WordForge - Word Chain Game</div> <div className="flex gap-6"> 
-            <Link href="/leaderboard" className="hover:text-primary-600 transition-colors"> 
-              Leaderboard 
-            </Link> 
-            <Link href="/profile" className="hover:text-primary-600 transition-colors"> 
-              Profile 
-            </Link> 
-          </div> 
-        </div> 
-      </footer> 
-    </div> 
-  ); 
+        {/* Languagess */}
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-2xl font-bold text-surface-900 mb-6">
+            {" "}
+            Multiple Languages{" "}
+          </h2>
+          <div className="flex justify-center gap-4">
+            <Card
+              padding="sm"
+              className="px-6 border-2 border-primary-500 bg-surface-900"
+            >
+              <span className="text-primary-400 font-bold mr-2">EN</span>
+              <span className="font-medium text-white">English</span>
+            </Card>
+            <Card padding="sm" className="px-6 opacity-50 bg-surface-900">
+              <span className="text-primary-400 font-bold mr-2">CZ</span>
+              <span className="font-medium text-white">Czech</span>
+              <span className="block text-xs text-surface-400">
+                Coming soon
+              </span>
+            </Card>{" "}
+            <Card padding="sm" className="px-6 opacity-50 bg-surface-900">
+              <span className="text-primary-400 font-bold mr-2">SK</span>
+              <span className="font-medium text-white">Slovak</span>
+              <span className="block text-xs text-surface-400">
+                Coming soon
+              </span>
+            </Card>
+          </div>
+        </div>
+      </main>
+      {/* Foter */}
+      <footer className="container mx-auto px-4 py-8 mt-16 border-t border-surface-200">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-surface-500">
+          <div>WordForge - Word Chain Game</div>{" "}
+          <div className="flex gap-6">
+            <Link
+              href="/leaderboard"
+              className="hover:text-primary-600 transition-colors"
+            >
+              Leaderboard
+            </Link>
+            <Link
+              href="/profile"
+              className="hover:text-primary-600 transition-colors"
+            >
+              Profile
+            </Link>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
 };
 
 export default Home;

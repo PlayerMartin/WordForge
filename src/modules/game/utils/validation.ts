@@ -20,6 +20,14 @@ export const validateWordLocally = (params: {
     };
   }
 
+  if (normalized.split(/\s+/).length > 1) {
+    return {
+      valid: false,
+      error: "many_words",
+      message: "Please enter a single word",
+    };
+  }
+
   const required = params.requiredLetter.toLowerCase();
 
   if (!normalized.startsWith(required)) {
