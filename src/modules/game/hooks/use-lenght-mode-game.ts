@@ -11,7 +11,7 @@ import {
 } from '@/modules/game/core/engine';
 import { UpdateGameProgress } from '@/actions/game-actions';
 
-import { useTurnTimer } from './use-turn-timer';
+import { useTimer } from './use-turn-timer';
 import { useGameEnd } from './use-game-end';
 import { useWordInput } from './use-word-input';
 
@@ -22,20 +22,21 @@ export const useLengthModeGame = (game: DbGame) => {
 
 	// === game end ===
 	const { isGameOver, isFinishing, endGame } = useGameEnd({
-		gameId: game.id,
-		getPayload: () => ({
-			score: snapshot.score,
-			wordsUsed: snapshot.wordsUsed
-		})
+		gameId: game.id
 	});
 
-	// === timer ===
-	const { remainingSeconds: turnTimeLeft, reset: resetTurnTimer } =
-		useTurnTimer({
-			durationSeconds: GAME_TIMERS.DEFAULT_TURN_TIME,
-			isRunning: !isGameOver,
-			onExpire: endGame
-		});
+	// === turn timer ===
+	const { remainingSeconds: turnTimeLeft, reset: resetTurnTimer } = useTimer({
+		durationSeconds: GAME_TIMERS.DEFAULT_TURN_TIME,
+		isRunning: !isGameOver,
+		onExpire: endGame
+	});
+	// === game timer ===
+	const { remainingSeconds: gameTimeLeft } = useTimer({
+		durationSeconds: GAME_TIMERS.DEFAULT_GAME_TIME,
+		isRunning: !isGameOver,
+		onExpire: endGame
+	});
 
 	// === word input UX ===
 	const {
@@ -47,6 +48,7 @@ export const useLengthModeGame = (game: DbGame) => {
 		handleSubmit
 	} = useWordInput({
 		currentLetter: snapshot.currentLetter,
+		language: snapshot.language,
 		usedWords: snapshot.wordsUsed,
 		canSubmit: !isGameOver && !isFinishing,
 		onValidWord: async rawInput => {
@@ -85,6 +87,7 @@ export const useLengthModeGame = (game: DbGame) => {
 		feedback,
 		isSubmitting: isBusy,
 		turnTimeLeft,
+		gameTimeLeft,
 		isGameOver,
 		handleSubmitWord: handleSubmit
 	};

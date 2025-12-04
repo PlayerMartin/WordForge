@@ -4,17 +4,7 @@ import { useCallback, useState } from 'react';
 
 import { FinishGame } from '@/actions/game-actions';
 
-type GameEndPayload = {
-	score: number;
-	wordsUsed: string[];
-};
-
-type UseGameEndOptions = {
-	gameId: string;
-	getPayload: () => GameEndPayload;
-};
-
-export const useGameEnd = ({ gameId, getPayload }: UseGameEndOptions) => {
+export const useGameEnd = ({ gameId }: { gameId: string }) => {
 	const [isGameOver, setIsGameOver] = useState(false);
 	const [isFinishing, setIsFinishing] = useState(false);
 
@@ -24,15 +14,12 @@ export const useGameEnd = ({ gameId, getPayload }: UseGameEndOptions) => {
 		setIsGameOver(true);
 		setIsFinishing(true);
 
-		try {
-			const payload = getPayload();
-			await FinishGame(gameId, payload);
-		} catch (err) {
-			console.error('Failed to finish game', err);
-		} finally {
-			setIsFinishing(false);
+		const res = await FinishGame(gameId);
+		if (!res.ok) {
+			console.error('Failed to finish game', res.err);
 		}
-	}, [gameId, getPayload, isGameOver, isFinishing]);
+		setIsFinishing(false);
+	}, [gameId, isGameOver, isFinishing]);
 
 	return {
 		isGameOver,

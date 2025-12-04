@@ -4,13 +4,8 @@ import { GAME_MODE_BY_ID, type GameModeId } from '@/modules/game/config/modes';
 import * as gameRepository from '@/modules/game/repositories/game-repository';
 import { type GameSettings, type Language } from '@/types';
 
-type FinishGameData = {
-	score?: number;
-	wordsUsed?: string[];
-};
-
-export const FinishGame = async (gameId: string, data?: FinishGameData) =>
-	await gameRepository.FinishGame(gameId, data);
+export const FinishGame = async (gameId: string) =>
+	await gameRepository.FinishGame(gameId);
 
 export const GetGame = async (gameId: string) =>
 	await gameRepository.GetGame(gameId);

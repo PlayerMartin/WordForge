@@ -3,11 +3,11 @@
 import { type DbGame } from '@/types/game';
 import ScoreDisplay from '@/modules/game/components/ui/score-display';
 import CurrentLetterCard from '@/modules/game/components/ui/current-letter-card';
-import TurnTimer from '@/modules/game/components/ui/turn-timer';
 import WordInputForm from '@/modules/game/components/forms/word-input-form';
 import WordsUsedCard from '@/modules/game/components/ui/words-used-card';
 import GameInfoNote from '@/modules/game/components/ui/game-info-note';
 
+import Timer from '../ui/timer';
 import { GAME_TIMERS } from '../../config/constants';
 import { useLengthModeGame } from '../../hooks/use-lenght-mode-game';
 
@@ -23,6 +23,7 @@ const LengthModeClient = ({ game }: LengthModeClientProps) => {
 		feedback,
 		isSubmitting,
 		turnTimeLeft,
+		gameTimeLeft,
 		isGameOver,
 		handleSubmitWord
 	} = useLengthModeGame(game);
@@ -46,12 +47,19 @@ const LengthModeClient = ({ game }: LengthModeClientProps) => {
 
 	return (
 		<div className="mx-auto max-w-2xl">
+			<Timer
+				totalSeconds={GAME_TIMERS.DEFAULT_GAME_TIME}
+				remainingSeconds={gameTimeLeft}
+			/>
+
 			<ScoreDisplay score={snapshot.score} />
 			<CurrentLetterCard letter={snapshot.currentLetter} />
-			<TurnTimer
+
+			<Timer
 				totalSeconds={GAME_TIMERS.DEFAULT_TURN_TIME}
 				remainingSeconds={turnTimeLeft}
 			/>
+
 			<WordInputForm
 				currentLetter={snapshot.currentLetter}
 				wordInput={wordInput}

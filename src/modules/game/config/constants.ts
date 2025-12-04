@@ -5,7 +5,7 @@
 // Timers
 export const GAME_TIMERS = {
 	DEFAULT_TURN_TIME: 10,
-	DEFAULT_GLOBAL_TIME: 300
+	DEFAULT_GAME_TIME: 300
 } as const;
 
 export const GAME_LIVES = {

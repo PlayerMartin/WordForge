@@ -4,11 +4,6 @@ import { LibsqlError } from '@libsql/client';
 import { db, games } from '@/lib/db';
 import { type GameSettings } from '@/types';
 
-type FinishGameData = {
-	score?: number;
-	wordsUsed?: string[];
-};
-
 export const CreateGame = async (userId: string, settings: GameSettings) => {
 	const result = await db
 		.insert(games)
@@ -24,23 +19,11 @@ export const CreateGame = async (userId: string, settings: GameSettings) => {
 	return result[0].id;
 };
 
-export const FinishGame = async (gameId: string, data?: FinishGameData) => {
+export const FinishGame = async (gameId: string) => {
 	try {
-		const updates: any = {
-			finishedAt: new Date()
-		};
-
-		if (typeof data?.score === 'number') {
-			updates.score = data.score;
-		}
-
-		if (data?.wordsUsed) {
-			updates.wordsUsed = data.wordsUsed;
-		}
-
 		const result = await db
 			.update(games)
-			.set(updates)
+			.set({ finishedAt: new Date() })
 			.where(eq(games.id, gameId))
 			.returning({ id: games.id });
 

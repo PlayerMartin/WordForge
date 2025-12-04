@@ -3,7 +3,7 @@ type GameLayoutProps = {
 	params: { id: string };
 };
 
-const GameLayout = ({ children, params }: GameLayoutProps) => (
+const GameLayout = ({ children }: GameLayoutProps) => (
 	<div>
 		<main className="container mx-auto px-4 py-8">{children}</main>
 	</div>
