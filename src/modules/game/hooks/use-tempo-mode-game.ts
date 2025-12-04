@@ -45,6 +45,7 @@ export const useTempoModeGame = (game: DbGame) => {
     handleSubmit,
   } = useWordInput({
     currentLetter: snapshot.currentLetter,
+    language: snapshot.language,
     usedWords: snapshot.wordsUsed,
     canSubmit: !isGameOver && !isFinishing,
     onValidWord: async (rawInput) => {
