@@ -14,7 +14,7 @@ import { type UserSigninData } from '@/types';
 import { db } from '@/lib/db';
 import { FindUserByName } from '@/modules/user/repositories/user-repository';
 
-export const SIGNIN_PAGE = '/auth/signin';
+export const SIGNIN_PAGE = '/auth/sign-in';
 
 // PROVIDERS
 export const Github = GithubProvider({

@@ -5,7 +5,7 @@ type GameInfoNoteProps = {
 };
 
 const GameInfoNote = ({ children }: GameInfoNoteProps) => (
-	<div className="mt-6 text-center text-sm text-surface-400">{children}</div>
+	<div className="mt-6 text-center text-sm text-surface-500">{children}</div>
 );
 
 export default GameInfoNote;

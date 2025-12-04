@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from 'react';
 
-import { FinishGame } from '@/actions/gameActions';
+import { FinishGame } from '@/actions/game-actions';
 
 type GameEndPayload = {
 	score: number;

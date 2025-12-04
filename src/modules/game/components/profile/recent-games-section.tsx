@@ -1,4 +1,4 @@
-import { GetRecentGamesForUser } from '@/actions/gameActions';
+import { GetRecentGamesForUser } from '@/actions/game-actions';
 import { type DbGame } from '@/types/game';
 
 import ProfileRecentGamesList from './profile-recent-games-list';

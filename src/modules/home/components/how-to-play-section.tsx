@@ -40,9 +40,7 @@ const HowToPlaySection = () => {
 
 	return (
 		<div className="flex flex-col">
-			<h2 className="mb-6 text-2xl font-bold text-surface-900">
-				How to Play
-			</h2>
+			<h2 className="mb-2 text-2xl font-bold">How to Play</h2>
 
 			<div className="relative flex flex-1 flex-col">
 				<Card className="relative flex-1 overflow-hidden bg-surface-900">
@@ -61,7 +59,6 @@ const HowToPlaySection = () => {
 					</div>
 				</Card>
 
-				{/* Dots Navigation */}
 				<div className="mt-4 flex justify-center gap-2">
 					{RULES.map((_, index) => (
 						<button
@@ -70,7 +67,7 @@ const HowToPlaySection = () => {
 							className={`h-3 w-3 rounded-full transition-all duration-300 ${
 								activeRule === index
 									? 'w-6 bg-primary-500'
-									: 'bg-surface-300 hover:bg-surface-400'
+									: 'bg-surface-600 hover:bg-surface-700'
 							}`}
 							aria-label={`Go to rule ${index + 1}`}
 						/>

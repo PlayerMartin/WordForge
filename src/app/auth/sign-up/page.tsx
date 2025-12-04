@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { SignUp } from '@/actions/authActions';
+import { SignUp } from '@/actions/auth-actions';
 import { type UserSignupData, userSignupSchema } from '@/types';
 import { Button, Card, Input } from '@/components/ui';
 
@@ -39,14 +39,14 @@ const SignUpPage = () => {
 				return;
 			}
 
-			router.push('/auth/signin');
+			router.push('/auth/sign-in');
 		} finally {
 			setIsLoading(false);
 		}
 	};
 
 	return (
-		<div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 p-4">
+		<div className="flex items-center justify-center p-4">
 			<div className="w-full max-w-md">
 				<div className="mb-8 text-center">
 					<h1 className="mb-2 text-3xl font-bold text-surface-900">
@@ -113,7 +113,7 @@ const SignUpPage = () => {
 					<p className="mt-6 text-center text-sm text-surface-500">
 						Already have an account?{' '}
 						<Link
-							href="/auth/signin"
+							href="/auth/sign-in"
 							className="font-medium text-primary-600 transition-colors hover:text-primary-500"
 						>
 							Sign in

@@ -75,7 +75,7 @@ const SignInPage = () => {
 	};
 
 	return (
-		<div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 p-4">
+		<div className="flex items-center justify-center p-4">
 			<div className="w-full max-w-md">
 				<div className="mb-8 text-center">
 					<h1 className="mb-2 text-3xl font-bold text-surface-900">

@@ -9,7 +9,7 @@ import {
 	createSnapshotFromDb,
 	applyWord
 } from '@/modules/game/core/engine';
-import { UpdateGameProgress } from '@/actions/gameActions';
+import { UpdateGameProgress } from '@/actions/game-actions';
 
 import { useTurnTimer } from './use-turn-timer';
 import { useGameEnd } from './use-game-end';

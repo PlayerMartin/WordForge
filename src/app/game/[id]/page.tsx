@@ -4,10 +4,6 @@ type PageProps = {
 	params: { id: string };
 };
 
-const Game = ({ params }: PageProps) => {
-	const gameId = params.id;
-
-	return <GameClient gameId={gameId} />;
-};
+const Game = ({ params }: PageProps) => <GameClient gameId={params.id} />;
 
 export default Game;

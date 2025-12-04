@@ -2,6 +2,8 @@ import { type Metadata } from 'next';
 
 import { Providers } from '@/components/utils/providers';
 import './globals.css';
+import Header from '@/components/layout/header';
+import Footer from '@/components/layout/footer';
 
 // TODO doplnit metadata
 export const metadata: Metadata = {
@@ -32,8 +34,12 @@ const RootLayout = ({
 	children: React.ReactNode;
 }>) => (
 	<html lang="en">
-		<body className="min-h-screen bg-surface-50 text-surface-900 antialiased">
-			<Providers>{children}</Providers>
+		<body className="flex min-h-screen flex-col bg-gradient-to-br from-primary-200 via-white to-secondary-400 text-surface-900">
+			<Providers>
+				<Header />
+				<main className="w-full flex-1">{children}</main>
+				<Footer />
+			</Providers>
 		</body>
 	</html>
 );
