@@ -1,11 +1,12 @@
 'use client';
 
-import { useFormContext } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Button } from '@/components/ui';
-import { type UserSignupData, type UserSigninData } from '@/types';
+import { type UserSigninData, userSigninSchema } from '@/types';
 
 import { AuthFormInput } from './auth-input';
 
@@ -20,7 +21,9 @@ export const SignInForm = ({
 	setError,
 	setIsLoading
 }: SignInFormProps) => {
-	const { handleSubmit } = useFormContext<UserSignupData>();
+	const form = useForm<UserSigninData>({
+		resolver: zodResolver(userSigninSchema)
+	});
 	const router = useRouter();
 
 	const handleCredentialsSignIn = async (data: UserSigninData) => {
@@ -59,31 +62,33 @@ export const SignInForm = ({
 	};
 
 	return (
-		<form
-			onSubmit={handleSubmit(handleCredentialsSignIn)}
-			className="space-y-4"
-		>
-			<AuthFormInput
-				label="Username"
-				name="name"
-				placeholder="Enter your username"
-			/>
-			<AuthFormInput
-				label="Password"
-				name="password"
-				placeholder="Enter your password"
-				type="password"
-			/>
-
-			<Button
-				type="submit"
-				fullWidth
-				size="lg"
-				loading={isLoading}
-				className="mt-6"
+		<FormProvider {...form}>
+			<form
+				onSubmit={form.handleSubmit(handleCredentialsSignIn)}
+				className="space-y-4"
 			>
-				Sign In
-			</Button>
-		</form>
+				<AuthFormInput
+					label="Username"
+					name="name"
+					placeholder="Enter your username"
+				/>
+				<AuthFormInput
+					label="Password"
+					name="password"
+					placeholder="Enter your password"
+					type="password"
+				/>
+
+				<Button
+					type="submit"
+					fullWidth
+					size="lg"
+					loading={isLoading}
+					className="mt-6"
+				>
+					Sign In
+				</Button>
+			</form>
+		</FormProvider>
 	);
 };

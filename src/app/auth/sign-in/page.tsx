@@ -1,11 +1,8 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
 
-import { type UserSigninData, userSigninSchema } from '@/types';
 import { Card } from '@/components/ui';
 import { SignInForm } from '@/modules/auth/components/sign-in-form';
 import { OAuthSection } from '@/modules/auth/components/oauth-section';
@@ -13,10 +10,6 @@ import { OAuthSection } from '@/modules/auth/components/oauth-section';
 const SignInPage = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-
-	const form = useForm<UserSigninData>({
-		resolver: zodResolver(userSigninSchema)
-	});
 
 	return (
 		<div className="flex items-center justify-center p-4">
@@ -37,13 +30,11 @@ const SignInPage = () => {
 						</div>
 					)}
 
-					<FormProvider {...form}>
-						<SignInForm
-							isLoading={isLoading}
-							setError={setError}
-							setIsLoading={setIsLoading}
-						/>
-					</FormProvider>
+					<SignInForm
+						isLoading={isLoading}
+						setError={setError}
+						setIsLoading={setIsLoading}
+					/>
 
 					<OAuthSection
 						isLoading={isLoading}
