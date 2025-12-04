@@ -6,8 +6,9 @@ export const normalizeWord = (input: string): string =>
 
 export const validateWordLocally = (params: {
 	rawInput: string;
-	requiredLetter: string;
+	startLetter: string;
 	usedWords: string[];
+	challengePart?: string | null;
 }): WordValidationResult => {
 	const normalized = normalizeWord(params.rawInput);
 
@@ -27,13 +28,23 @@ export const validateWordLocally = (params: {
 		};
 	}
 
-	const required = params.requiredLetter.toLowerCase();
-
-	if (!normalized.startsWith(required)) {
+	const start = params.startLetter.toLowerCase();
+	if (!normalized.startsWith(start)) {
 		return {
 			valid: false,
 			error: 'wrong_letter',
-			message: `Word must start with "${params.requiredLetter}"`
+			message: `Word must start with "${params.startLetter}"`
+		};
+	}
+
+	if (
+		params.challengePart &&
+		!normalized.includes(params.challengePart.toLowerCase())
+	) {
+		return {
+			valid: false,
+			error: 'wrong_letter',
+			message: `Word must contain "${params.challengePart}"`
 		};
 	}
 

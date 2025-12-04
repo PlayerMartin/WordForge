@@ -9,6 +9,7 @@ import GameInfoNote from '@/modules/game/components/ui/game-info-note';
 import Timer from '@/modules/game/components/ui/timer';
 import { GAME_TIMERS } from '@/modules/game/config/constants';
 import { useWordGame } from '../hooks/use-word-game';
+import HeartsDisplay from './ui/hearts-display';
 
 type Props = {
 	game: DbGame;
@@ -25,6 +26,7 @@ const GameClient = ({ game }: Props) => {
 		gameTimeLeft,
 		hasGameTimer,
 		bottomNote,
+		heartsLeft,
 		isGameOver,
 		handleSubmitWord
 	} = useWordGame(game);
@@ -33,7 +35,7 @@ const GameClient = ({ game }: Props) => {
 
 	if (isGameOver) {
 		return (
-			<div className="mx-auto max-w-2xl">
+			<div className="relative mx-auto max-w-2xl">
 				<ScoreDisplay score={snapshot.score} />
 				<WordsUsedCard words={snapshot.wordsUsed} />
 				<GameInfoNote>
@@ -48,6 +50,10 @@ const GameClient = ({ game }: Props) => {
 
 	return (
 		<div className="mx-auto max-w-2xl">
+			{game.mode === 'solo_hidden' && heartsLeft !== null && (
+				<HeartsDisplay heartsLeft={heartsLeft} />
+			)}
+
 			{hasGameTimer && gameTimeLeft !== null && (
 				<Timer
 					totalSeconds={GAME_TIMERS.DEFAULT_GAME_TIME}
@@ -56,7 +62,10 @@ const GameClient = ({ game }: Props) => {
 			)}
 
 			<ScoreDisplay score={snapshot.score} />
-			<CurrentLetterCard letter={snapshot.currentLetter} />
+			<CurrentLetterCard
+				letter={snapshot.currentLetter}
+				challengePart={snapshot.challengePart}
+			/>
 
 			<Timer
 				totalSeconds={GAME_TIMERS.DEFAULT_TURN_TIME}

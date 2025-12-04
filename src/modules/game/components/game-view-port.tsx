@@ -4,7 +4,6 @@ import { getServerSession } from 'next-auth';
 import { GetGame } from '@/actions/game-actions';
 import { type DbGame } from '@/types/game';
 import { authOptions } from '@/lib/auth/authOptions';
-import ComingSoon from './coming-soon';
 import GameClient from './game-client';
 
 type Props = {
@@ -32,11 +31,7 @@ const GameViewport = async ({ gameId }: Props) => {
 		redirect('/');
 	}
 
-	return ['solo_length', 'solo_tempo'].includes(game.mode) ? (
-		<GameClient game={game} />
-	) : (
-		<ComingSoon />
-	);
+	return <GameClient game={game} />;
 };
 
 export default GameViewport;
