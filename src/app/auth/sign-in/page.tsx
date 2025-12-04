@@ -3,12 +3,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getProviders, signIn } from 'next-auth/react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import { type UserSigninData, userSigninSchema } from '@/types';
-import { Button, Card, Input } from '@/components/ui';
+import { Button, Card } from '@/components/ui';
+import { SignInForm } from '@/modules/auth/components/sign-in-form';
 
 const SignInPage = () => {
 	const [providers, setProviders] = useState<Record<string, any> | null>(
@@ -16,13 +16,8 @@ const SignInPage = () => {
 	);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const router = useRouter();
 
-	const {
-		register,
-		handleSubmit,
-		formState: { errors }
-	} = useForm<UserSigninData>({
+	const form = useForm<UserSigninData>({
 		resolver: zodResolver(userSigninSchema)
 	});
 
@@ -33,41 +28,6 @@ const SignInPage = () => {
 		};
 		fetchProviders();
 	}, []);
-
-	const onSubmit = async (data: UserSigninData) => {
-		setError(null);
-		setIsLoading(true);
-
-		try {
-			const res = await signIn('credentials', {
-				...data,
-				redirect: false
-			});
-
-			if (!res?.error) {
-				router.replace('/');
-				return;
-			}
-
-			switch (res.error) {
-				case 'user_not_found':
-					setError('User does not exist');
-					break;
-				case 'invalid_password':
-					setError('Incorrect password');
-					break;
-				case 'provider_account':
-					setError(
-						'This account uses social login. Please sign in with GitHub.'
-					);
-					break;
-				default:
-					setError('Something went wrong. Please try again.');
-			}
-		} finally {
-			setIsLoading(false);
-		}
-	};
 
 	const handleOAuthSignIn = (providerId: string) => {
 		setIsLoading(true);
@@ -93,35 +53,13 @@ const SignInPage = () => {
 						</div>
 					)}
 
-					<form
-						onSubmit={handleSubmit(onSubmit)}
-						className="space-y-4"
-					>
-						<Input
-							label="Username"
-							placeholder="Enter your username"
-							error={errors.name?.message}
-							{...register('name')}
+					<FormProvider {...form}>
+						<SignInForm
+							isLoading={isLoading}
+							setError={setError}
+							setIsLoading={setIsLoading}
 						/>
-
-						<Input
-							label="Password"
-							type="password"
-							placeholder="Enter your password"
-							error={errors.password?.message}
-							{...register('password')}
-						/>
-
-						<Button
-							type="submit"
-							fullWidth
-							size="lg"
-							loading={isLoading}
-							className="mt-6"
-						>
-							Sign In
-						</Button>
-					</form>
+					</FormProvider>
 
 					{providers &&
 						Object.values(providers).some(
