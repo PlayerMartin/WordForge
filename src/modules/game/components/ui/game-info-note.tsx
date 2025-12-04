@@ -1,16 +1,11 @@
-// modules/game/components/ui/game-info-note.tsx
-"use client";
+'use client';
 
 type GameInfoNoteProps = {
-  children: React.ReactNode;
+	children: React.ReactNode;
 };
 
-const GameInfoNote = ({ children }: GameInfoNoteProps) => {
-  return (
-    <div className="mt-6 text-center text-sm text-surface-400">
-      {children}
-    </div>
-  );
-};
+const GameInfoNote = ({ children }: GameInfoNoteProps) => (
+	<div className="mt-6 text-center text-sm text-surface-400">{children}</div>
+);
 
 export default GameInfoNote;

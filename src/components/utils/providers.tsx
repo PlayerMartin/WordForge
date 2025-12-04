@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { PropsWithChildren } from "react";
-import { SessionProvider } from "next-auth/react";
+import { type PropsWithChildren } from 'react';
+import { SessionProvider } from 'next-auth/react';
 
 export const Providers = ({ children }: PropsWithChildren) => (
-  <SessionProvider>{children}</SessionProvider>
+	<SessionProvider>{children}</SessionProvider>
 );

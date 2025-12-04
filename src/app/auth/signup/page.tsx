@@ -1,123 +1,128 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { SignUp } from "@/actions/authActions";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { UserSignupData, userSignupSchema } from "@/types";
-import { Button, Card, Input } from "@/components/ui";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-export default function SignUpPage() {
-  const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+import { SignUp } from '@/actions/authActions';
+import { type UserSignupData, userSignupSchema } from '@/types';
+import { Button, Card, Input } from '@/components/ui';
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<UserSignupData>({
-    resolver: zodResolver(userSignupSchema),
-  });
+const SignUpPage = () => {
+	const router = useRouter();
+	const [error, setError] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit = async (data: UserSignupData) => {
-    setError(null);
-    setIsLoading(true);
+	const {
+		register,
+		handleSubmit,
+		formState: { errors }
+	} = useForm<UserSignupData>({
+		resolver: zodResolver(userSignupSchema)
+	});
 
-    try {
-      const res = await SignUp({
-        name: data.name,
-        email: data.email,
-        password: data.password,
-      });
+	const onSubmit = async (data: UserSignupData) => {
+		setError(null);
+		setIsLoading(true);
 
-      if (!res.ok) {
-        setError(res.err ?? "Something went wrong. Please try again.");
-        return;
-      }
+		try {
+			const res = await SignUp({
+				name: data.name,
+				email: data.email,
+				password: data.password
+			});
 
-      router.push("/auth/signin");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+			if (!res.ok) {
+				setError(res.err ?? 'Something went wrong. Please try again.');
+				return;
+			}
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-surface-900 mb-2">
-            Create account
-          </h1>
-          <p className="text-surface-500">
-            Join WordForge and start playing
-          </p>
-        </div>
+			router.push('/auth/signin');
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
-        <Card padding="lg" className="animate-fade-in">
-          {error && (
-            <div className="mb-6 p-4 bg-error-50 border border-error-200 rounded-lg">
-              <p className="text-sm text-error-600">{error}</p>
-            </div>
-          )}
+	return (
+		<div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 p-4">
+			<div className="w-full max-w-md">
+				<div className="mb-8 text-center">
+					<h1 className="mb-2 text-3xl font-bold text-surface-900">
+						Create account
+					</h1>
+					<p className="text-surface-500">
+						Join WordForge and start playing
+					</p>
+				</div>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <Input
-              label="Username"
-              placeholder="Choose a username"
-              error={errors.name?.message}
-              {...register("name")}
-            />
+				<Card padding="lg" className="animate-fade-in">
+					{error && (
+						<div className="mb-6 rounded-lg border border-error-200 bg-error-50 p-4">
+							<p className="text-sm text-error-600">{error}</p>
+						</div>
+					)}
 
-            <Input
-              label="Email"
-              type="email"
-              placeholder="Enter your email"
-              error={errors.email?.message}
-              {...register("email")}
-            />
+					<form
+						onSubmit={handleSubmit(onSubmit)}
+						className="space-y-4"
+					>
+						<Input
+							label="Username"
+							placeholder="Choose a username"
+							error={errors.name?.message}
+							{...register('name')}
+						/>
 
-            <Input
-              label="Password"
-              type="password"
-              placeholder="Create a password"
-              error={errors.password?.message}
-              {...register("password")}
-            />
+						<Input
+							label="Email"
+							type="email"
+							placeholder="Enter your email"
+							error={errors.email?.message}
+							{...register('email')}
+						/>
 
-            <Input
-              label="Confirm Password"
-              type="password"
-              placeholder="Confirm your password"
-              error={errors.password2?.message}
-              {...register("password2")}
-            />
+						<Input
+							label="Password"
+							type="password"
+							placeholder="Create a password"
+							error={errors.password?.message}
+							{...register('password')}
+						/>
 
-            <Button
-              type="submit"
-              fullWidth
-              size="lg"
-              loading={isLoading}
-              className="mt-6"
-            >
-              Create Account
-            </Button>
-          </form>
+						<Input
+							label="Confirm Password"
+							type="password"
+							placeholder="Confirm your password"
+							error={errors.password2?.message}
+							{...register('password2')}
+						/>
 
-          <p className="mt-6 text-center text-sm text-surface-500">
-            Already have an account?{" "}
-            <Link
-              href="/auth/signin"
-              className="font-medium text-primary-600 hover:text-primary-500 transition-colors"
-            >
-              Sign in
-            </Link>
-          </p>
-        </Card>
+						<Button
+							type="submit"
+							fullWidth
+							size="lg"
+							loading={isLoading}
+							className="mt-6"
+						>
+							Create Account
+						</Button>
+					</form>
 
-      </div>
-    </div>
-  );
-}
+					<p className="mt-6 text-center text-sm text-surface-500">
+						Already have an account?{' '}
+						<Link
+							href="/auth/signin"
+							className="font-medium text-primary-600 transition-colors hover:text-primary-500"
+						>
+							Sign in
+						</Link>
+					</p>
+				</Card>
+			</div>
+		</div>
+	);
+};
+
+export default SignUpPage;

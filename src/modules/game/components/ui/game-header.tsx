@@ -1,33 +1,29 @@
-// modules/game/components/ui/game-header.tsx
-"use client";
+'use client';
 
-import { Button } from "@/components/ui";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
-type GameHeaderProps = {
-  gameId: string;
-};
+import { Button } from '@/components/ui';
 
-const GameHeader = ({ gameId }: GameHeaderProps) => {
-  const router = useRouter();
+const GameHeader = () => {
+	const router = useRouter();
 
-  const leaveGame = () => {
-    router.push("/");
-  };
+	const leaveGame = () => {
+		router.push('/');
+	};
 
-  return (
-    <header className="container mx-auto px-4 py-4">
-      <nav className="flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold text-primary-600">
-          WordForge
-        </Link>
-        <Button variant="ghost" size="sm" onClick={leaveGame}>
-          Leave Game
-        </Button>
-      </nav>
-    </header>
-  );
+	return (
+		<header className="container mx-auto px-4 py-4">
+			<nav className="flex items-center justify-between">
+				<Link href="/" className="text-xl font-bold text-primary-600">
+					WordForge
+				</Link>
+				<Button variant="ghost" size="sm" onClick={leaveGame}>
+					Leave Game
+				</Button>
+			</nav>
+		</header>
+	);
 };
 
 export default GameHeader;
