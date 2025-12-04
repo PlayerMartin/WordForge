@@ -91,7 +91,22 @@ export const authOptions: NextAuthOptions = {
 	secret: process.env.NEXTAUTH_SECRET,
 	callbacks: {
 		jwt: jwtCallback,
-		session: sessionCallback
+		session: sessionCallback,
+		redirect: async ({ url, baseUrl }) => {
+			const u = new URL(url, baseUrl);
+
+			// Hack for next-auth because on failed provider auth
+			// the callbackUrl and error querie params are
+			// always set and as far as i have found, there
+			// is no way to overwrite this.
+			// https://github.com/nextauthjs/next-auth/issues/7753
+			// https://github.com/nextauthjs/next-auth/discussions/8209
+			// Everyone just manually rewrites the url at some point.
+			u.searchParams.delete('error');
+			u.searchParams.delete('callbackUrl');
+
+			return u.origin + u.pathname;
+		}
 	},
 	pages: {
 		signIn: SIGNIN_PAGE
