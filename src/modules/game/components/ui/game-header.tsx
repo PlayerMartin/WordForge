@@ -5,7 +5,11 @@ import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui';
 
-const GameHeader = () => {
+type GameHeaderProps = {
+	gameId: string;
+};
+
+const GameHeader = ({ gameId }: GameHeaderProps) => {
 	const router = useRouter();
 
 	const leaveGame = () => {

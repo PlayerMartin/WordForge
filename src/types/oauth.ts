@@ -1,15 +1,16 @@
-import { type DefaultSession } from 'next-auth';
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
+import { DefaultSession } from 'next-auth';
 
 declare module 'next-auth' {
-	type Session = {
+	interface Session {
 		user: {
 			id: string;
 		} & DefaultSession['user'];
-	};
+	}
 }
 
 declare module 'next-auth/jwt' {
-	type JWT = {
+	interface JWT {
 		id: string;
-	};
+	}
 }

@@ -85,10 +85,10 @@ const GameClient = ({ gameId }: GameClientProps) => {
 			return <TempoModeClient game={game} />;
 
 		case 'solo_challenge_contain_part':
-			return <ChallangeContainPartModeClient game={game} />;
+			return <ChallangeContainPartModeClient />;
 
 		case 'solo_hidden':
-			return <HiddenModeClient game={game} />;
+			return <HiddenModeClient />;
 	}
 };
 

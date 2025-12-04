@@ -28,10 +28,10 @@ export const getScoreForWord = (
 			return -10000;
 		case 'solo_hidden':
 			// TODO
-			break;
+			return 0;
 		case 'solo_challenge_contain_part':
 			// TODO
-			break;
+			return 0;
 		default:
 			return 0;
 	}
