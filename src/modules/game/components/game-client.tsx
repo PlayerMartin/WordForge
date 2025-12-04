@@ -23,6 +23,8 @@ const GameClient = ({ game }: Props) => {
 		isSubmitting,
 		turnTimeLeft,
 		gameTimeLeft,
+		hasGameTimer,
+		bottomNote,
 		isGameOver,
 		handleSubmitWord
 	} = useWordGame(game);
@@ -44,17 +46,14 @@ const GameClient = ({ game }: Props) => {
 		);
 	}
 
-	const bottomNote =
-		game.mode === 'solo_length'
-			? 'Longer words = more points (2^length)'
-			: 'The faster the answer, the more points!';
-
 	return (
 		<div className="mx-auto max-w-2xl">
-			<Timer
-				totalSeconds={GAME_TIMERS.DEFAULT_GAME_TIME}
-				remainingSeconds={gameTimeLeft}
-			/>
+			{hasGameTimer && gameTimeLeft !== null && (
+				<Timer
+					totalSeconds={GAME_TIMERS.DEFAULT_GAME_TIME}
+					remainingSeconds={gameTimeLeft}
+				/>
+			)}
 
 			<ScoreDisplay score={snapshot.score} />
 			<CurrentLetterCard letter={snapshot.currentLetter} />
@@ -73,7 +72,10 @@ const GameClient = ({ game }: Props) => {
 				feedback={feedback}
 			/>
 
-			<WordsUsedCard words={snapshot.wordsUsed} />
+			{game.mode !== 'solo_hidden' && (
+				<WordsUsedCard words={snapshot.wordsUsed} />
+			)}
+
 			<GameInfoNote>{bottomNote}</GameInfoNote>
 		</div>
 	);

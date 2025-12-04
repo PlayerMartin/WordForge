@@ -15,12 +15,44 @@ import { useTimer } from './use-timer';
 import { useGameEnd } from './use-game-end';
 import { useWordInput } from './use-word-input';
 
+type GameMode = DbGame['mode'];
+
+type ModeConfig = {
+	hasGameTimer: boolean;
+	usesTempoScoring: boolean;
+	bottomNote: string;
+};
+
+const MODE_CONFIG: Record<GameMode, ModeConfig> = {
+	solo_length: {
+		hasGameTimer: true,
+		usesTempoScoring: false,
+		bottomNote: 'Longer words = more points (2^length)'
+	},
+	solo_tempo: {
+		hasGameTimer: true,
+		usesTempoScoring: true,
+		bottomNote: 'The faster the answer, the more points!'
+	},
+	solo_hidden: {
+		hasGameTimer: false,
+		usesTempoScoring: false,
+		bottomNote: 'Hidden mode – focus on each turn!'
+	},
+	solo_challenge_contain_part: {
+		hasGameTimer: true,
+		usesTempoScoring: false,
+		bottomNote: 'Words must contain the given part!'
+	}
+};
+
 export const useWordGame = (game: DbGame) => {
 	const [snapshot, setSnapshot] = useState<GameSnapshot>(() =>
 		createSnapshotFromDb(game)
 	);
 
-	const isTempoMode = game.mode === 'solo_tempo';
+	const modeConfig = MODE_CONFIG[game.mode];
+	const { hasGameTimer, usesTempoScoring, bottomNote } = modeConfig;
 
 	// === game end ===
 	const { isGameOver, isFinishing, endGame } = useGameEnd({
@@ -35,11 +67,13 @@ export const useWordGame = (game: DbGame) => {
 	});
 
 	// === game timer ===
-	const { remainingSeconds: gameTimeLeft } = useTimer({
+	const { remainingSeconds: rawGameTimeLeft } = useTimer({
 		durationSeconds: GAME_TIMERS.DEFAULT_GAME_TIME,
-		isRunning: !isGameOver,
-		onExpire: endGame
+		isRunning: hasGameTimer && !isGameOver,
+		onExpire: hasGameTimer ? endGame : undefined
 	});
+
+	const gameTimeLeft = hasGameTimer ? rawGameTimeLeft : null;
 
 	// === word input UX ===
 	const {
@@ -57,12 +91,10 @@ export const useWordGame = (game: DbGame) => {
 		onValidWord: async rawInput => {
 			const before = snapshot.score;
 
-			const next = isTempoMode
-				? applyWord(
-						snapshot,
-						rawInput,
-						GAME_TIMERS.DEFAULT_TURN_TIME - turnTimeLeft
-					)
+			const elapsedTurn = GAME_TIMERS.DEFAULT_TURN_TIME - turnTimeLeft;
+
+			const next = usesTempoScoring
+				? applyWord(snapshot, rawInput, elapsedTurn)
 				: applyWord(snapshot, rawInput);
 
 			const gained = next.score - before;
@@ -99,6 +131,8 @@ export const useWordGame = (game: DbGame) => {
 		isSubmitting: isBusy,
 		turnTimeLeft,
 		gameTimeLeft,
+		hasGameTimer,
+		bottomNote,
 		isGameOver,
 		handleSubmitWord: handleSubmit
 	};
