@@ -1,95 +1,82 @@
 'use client';
 
-import { useSession } from 'next-auth/react';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-
-import { GetGame } from '@/actions/game-actions';
-import { Button, Card } from '@/components/ui';
 import { type DbGame } from '@/types/game';
+import ScoreDisplay from '@/modules/game/components/ui/score-display';
+import CurrentLetterCard from '@/modules/game/components/ui/current-letter-card';
+import WordInputForm from '@/modules/game/components/forms/word-input-form';
+import WordsUsedCard from '@/modules/game/components/ui/words-used-card';
+import GameInfoNote from '@/modules/game/components/ui/game-info-note';
+import Timer from '@/modules/game/components/ui/timer';
+import { GAME_TIMERS } from '@/modules/game/config/constants';
+import { useWordGame } from '../hooks/use-word-game';
 
-import LengthModeClient from './modes/length-mode-client';
-import TempoModeClient from './modes/tempo-mode-client';
-import HiddenModeClient from './modes/hidden-mode-client';
-import ChallangeContainPartModeClient from './modes/challange-contain-part-mode-client';
-
-type GameClientProps = {
-	gameId: string;
+type Props = {
+	game: DbGame;
 };
 
-const GameClient = ({ gameId }: GameClientProps) => {
-	const session = useSession();
-	const [game, setGame] = useState<DbGame | null>(null);
-	const [error, setError] = useState<string | null>(null);
+const GameClient = ({ game }: Props) => {
+	const {
+		snapshot,
+		wordInput,
+		setWordInput,
+		feedback,
+		isSubmitting,
+		turnTimeLeft,
+		gameTimeLeft,
+		isGameOver,
+		handleSubmitWord
+	} = useWordGame(game);
 
-	useEffect(() => {
-		const loadGame = async () => {
-			if (session.status === 'loading') return;
+	const wordCount = snapshot.wordsUsed.length;
 
-			const dbGame = (await GetGame(gameId)) as DbGame | null;
-
-			if (!dbGame) {
-				setError('Game ID is not valid');
-				return;
-			}
-			if (dbGame.userId !== session.data?.user.id) {
-				setError('Unauthorized');
-				return;
-			}
-			if (dbGame.finishedAt) {
-				setError('Game already ended');
-				return;
-			}
-
-			setGame(dbGame);
-		};
-
-		loadGame();
-	}, [session.status, session.data?.user?.id, gameId]);
-
-	if (session.status === 'loading' || (!game && !error)) {
+	if (isGameOver) {
 		return (
-			<div className="flex items-center justify-center">
-				<div className="h-8 w-8 animate-spin rounded-full border-4 border-primary-500 border-t-transparent" />
+			<div className="mx-auto max-w-2xl">
+				<ScoreDisplay score={snapshot.score} />
+				<WordsUsedCard words={snapshot.wordsUsed} />
+				<GameInfoNote>
+					Time&apos;s up! Final score:{' '}
+					<strong>{snapshot.score}</strong> points,{' '}
+					<strong>{wordCount}</strong>{' '}
+					{wordCount === 1 ? 'word' : 'words'}.
+				</GameInfoNote>
 			</div>
 		);
 	}
 
-	if (error) {
-		return (
-			<div className="flex items-center justify-center">
-				<Card className="max-w-md text-center">
-					<h1 className="mb-2 text-xl font-bold text-surface-900">
-						{error}
-					</h1>
-					<p className="mb-4 text-surface-500">
-						Something went wrong with this game.
-					</p>
-					<Link href="/">
-						<Button>Back to Home</Button>
-					</Link>
-				</Card>
-			</div>
-		);
-	}
+	const bottomNote =
+		game.mode === 'solo_length'
+			? 'Longer words = more points (2^length)'
+			: 'The faster the answer, the more points!';
 
-	if (!game) {
-		return null;
-	}
+	return (
+		<div className="mx-auto max-w-2xl">
+			<Timer
+				totalSeconds={GAME_TIMERS.DEFAULT_GAME_TIME}
+				remainingSeconds={gameTimeLeft}
+			/>
 
-	switch (game.mode) {
-		case 'solo_length':
-			return <LengthModeClient game={game} />;
+			<ScoreDisplay score={snapshot.score} />
+			<CurrentLetterCard letter={snapshot.currentLetter} />
 
-		case 'solo_tempo':
-			return <TempoModeClient game={game} />;
+			<Timer
+				totalSeconds={GAME_TIMERS.DEFAULT_TURN_TIME}
+				remainingSeconds={turnTimeLeft}
+			/>
 
-		case 'solo_challenge_contain_part':
-			return <ChallangeContainPartModeClient />;
+			<WordInputForm
+				currentLetter={snapshot.currentLetter}
+				wordInput={wordInput}
+				onWordChange={setWordInput}
+				onSubmit={handleSubmitWord}
+				isSubmitting={isSubmitting}
+				feedback={feedback}
+			/>
 
-		case 'solo_hidden':
-			return <HiddenModeClient />;
-	}
+			<WordsUsedCard words={snapshot.wordsUsed} />
+			<GameInfoNote>{bottomNote}</GameInfoNote>
+		</div>
+	);
 };
 
 export default GameClient;

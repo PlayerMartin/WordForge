@@ -15,10 +15,12 @@ import { useTimer } from './use-turn-timer';
 import { useGameEnd } from './use-game-end';
 import { useWordInput } from './use-word-input';
 
-export const useLengthModeGame = (game: DbGame) => {
+export const useWordGame = (game: DbGame) => {
 	const [snapshot, setSnapshot] = useState<GameSnapshot>(() =>
 		createSnapshotFromDb(game)
 	);
+
+	const isTempoMode = game.mode === 'solo_tempo';
 
 	// === game end ===
 	const { isGameOver, isFinishing, endGame } = useGameEnd({
@@ -31,6 +33,7 @@ export const useLengthModeGame = (game: DbGame) => {
 		isRunning: !isGameOver,
 		onExpire: endGame
 	});
+
 	// === game timer ===
 	const { remainingSeconds: gameTimeLeft } = useTimer({
 		durationSeconds: GAME_TIMERS.DEFAULT_GAME_TIME,
@@ -53,7 +56,15 @@ export const useLengthModeGame = (game: DbGame) => {
 		canSubmit: !isGameOver && !isFinishing,
 		onValidWord: async rawInput => {
 			const before = snapshot.score;
-			const next = applyWord(snapshot, rawInput);
+
+			const next = isTempoMode
+				? applyWord(
+						snapshot,
+						rawInput,
+						GAME_TIMERS.DEFAULT_TURN_TIME - turnTimeLeft
+					)
+				: applyWord(snapshot, rawInput);
+
 			const gained = next.score - before;
 
 			setSnapshot(next);
