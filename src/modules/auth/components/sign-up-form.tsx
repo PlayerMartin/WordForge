@@ -11,11 +11,8 @@ import { SignUp } from '@/actions/auth-actions';
 
 import { AuthFormInput } from './auth-input';
 
-type SignUpFormProps = {
-	setError: (msg: string | null) => void;
-};
-
-export const SignUpForm = ({ setError }: SignUpFormProps) => {
+export const SignUpForm = () => {
+	const [error, setError] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const form = useForm<UserSignupData>({
 		resolver: zodResolver(userSignupSchema)
@@ -45,42 +42,53 @@ export const SignUpForm = ({ setError }: SignUpFormProps) => {
 	};
 
 	return (
-		<FormProvider {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-				<AuthFormInput
-					label="Username"
-					name="name"
-					placeholder="Choose your username"
-				/>
-				<AuthFormInput
-					label="Email"
-					name="email"
-					type="email"
-					placeholder="Enter your email"
-				/>
-				<AuthFormInput
-					label="Password"
-					name="password"
-					placeholder="Create a password"
-					type="password"
-				/>
-				<AuthFormInput
-					label="Confirm password"
-					name="password2"
-					placeholder="Confirm your password"
-					type="password"
-				/>
+		<>
+			{error && (
+				<div className="mb-6 rounded-lg border border-error-200 bg-error-50 p-4">
+					<p className="text-sm text-error-600">{error}</p>
+				</div>
+			)}
 
-				<Button
-					type="submit"
-					fullWidth
-					size="lg"
-					loading={isLoading}
-					className="mt-6"
+			<FormProvider {...form}>
+				<form
+					onSubmit={form.handleSubmit(onSubmit)}
+					className="space-y-4"
 				>
-					Create Account
-				</Button>
-			</form>
-		</FormProvider>
+					<AuthFormInput
+						label="Username"
+						name="name"
+						placeholder="Choose your username"
+					/>
+					<AuthFormInput
+						label="Email"
+						name="email"
+						type="email"
+						placeholder="Enter your email"
+					/>
+					<AuthFormInput
+						label="Password"
+						name="password"
+						placeholder="Create a password"
+						type="password"
+					/>
+					<AuthFormInput
+						label="Confirm password"
+						name="password2"
+						placeholder="Confirm your password"
+						type="password"
+					/>
+
+					<Button
+						type="submit"
+						fullWidth
+						size="lg"
+						loading={isLoading}
+						className="mt-6"
+					>
+						Create Account
+					</Button>
+				</form>
+			</FormProvider>
+		</>
 	);
 };
