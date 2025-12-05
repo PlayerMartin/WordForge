@@ -8,7 +8,11 @@ import WordsUsedCard from '@/modules/game/components/ui/words-used-card';
 import GameInfoNote from '@/modules/game/components/ui/game-info-note';
 import Timer from '@/modules/game/components/ui/timer';
 import { GAME_TIMERS } from '@/modules/game/config/constants';
+import { Button } from '@/components/ui';
+
+import { usePlayAgain } from '../hooks/use-play-again';
 import { useWordGame } from '../hooks/use-word-game';
+
 import HeartsDisplay from './ui/hearts-display';
 
 type Props = {
@@ -30,12 +34,13 @@ const GameClient = ({ game }: Props) => {
 		isGameOver,
 		handleSubmitWord
 	} = useWordGame(game);
+	const { isStarting, handlePlayAgain } = usePlayAgain(game);
 
 	const wordCount = snapshot.wordsUsed.length;
 
 	if (isGameOver) {
 		return (
-			<div className="relative mx-auto max-w-2xl">
+			<div className="mx-auto max-w-2xl text-center">
 				<ScoreDisplay score={snapshot.score} />
 				<WordsUsedCard words={snapshot.wordsUsed} />
 				<GameInfoNote>
@@ -44,6 +49,17 @@ const GameClient = ({ game }: Props) => {
 					<strong>{wordCount}</strong>{' '}
 					{wordCount === 1 ? 'word' : 'words'}.
 				</GameInfoNote>
+
+				<div className="mt-6 flex justify-center">
+					<Button
+						type="button"
+						variant="primary"
+						onClick={isStarting ? undefined : handlePlayAgain}
+						disabled={isStarting}
+					>
+						{isStarting ? 'Starting...' : 'Play Again'}
+					</Button>
+				</div>
 			</div>
 		);
 	}

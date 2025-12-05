@@ -1,7 +1,8 @@
 import { Suspense } from 'react';
 
-import LoadingGame from './loading';
 import GameViewport from '@/modules/game/components/game-view-port';
+
+import LoadingGame from './loading';
 
 type PageProps = {
 	params: { id: string };

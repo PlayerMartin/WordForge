@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth';
 import { GetGame } from '@/actions/game-actions';
 import { type DbGame } from '@/types/game';
 import { authOptions } from '@/lib/auth/authOptions';
+
 import GameClient from './game-client';
 
 type Props = {

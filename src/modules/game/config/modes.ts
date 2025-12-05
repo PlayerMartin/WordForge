@@ -1,5 +1,8 @@
 import { GAME_TIMERS } from './constants';
 
+export const dbModeToModeId = (dbMode: GameDbMode): GameModeId =>
+	dbMode.replace(/^solo_/, '') as GameModeId;
+
 export type GameModeId =
 	| 'tempo'
 	| 'length'

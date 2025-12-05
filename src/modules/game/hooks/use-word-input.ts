@@ -2,11 +2,12 @@
 
 import { useState } from 'react';
 
+import type { Language, WordValidationResult } from '@/types';
 import type { Feedback } from '@/modules/game/components/forms/word-input-form';
-import { WordValidationResult, type Language } from '@/types';
+
+import { validateWordLocally } from '../utils/validation';
 
 import { useCheckWord } from './use-validation';
-import { validateWordLocally } from '../utils/validation';
 
 type UseWordInputOptions = {
 	currentLetter: string;

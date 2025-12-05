@@ -30,8 +30,8 @@ export const createSnapshotFromDb = (game: DbGame): GameSnapshot => {
 		language: game.language,
 		score: game.score ?? 0,
 		wordsUsed: words,
-		currentLetter: currentLetter,
-		challengePart: challengePart
+		currentLetter,
+		challengePart
 	};
 };
 

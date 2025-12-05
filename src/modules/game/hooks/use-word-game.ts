@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 
-import { WordValidationResult, type DbGame } from '@/types/game';
+import type { WordValidationResult, DbGame } from '@/types/game';
 import { GAME_TIMERS } from '@/modules/game/config/constants';
 import {
 	type GameSnapshot,
@@ -124,7 +124,7 @@ export const useWordGame = (game: DbGame) => {
 		language: snapshot.language,
 		usedWords: snapshot.wordsUsed,
 		canSubmit: !isGameOver && !isFinishing,
-		challengePart: challengePart,
+		challengePart,
 		onLocalValidationError: handleLocalValidationError,
 		onValidWord: async rawInput => {
 			const before = snapshot.score;
