@@ -1,5 +1,3 @@
-'use client';
-
 type GameTimerProps = {
 	totalSeconds: number;
 	remainingSeconds: number;

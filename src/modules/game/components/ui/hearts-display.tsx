@@ -1,5 +1,3 @@
-'use client';
-
 type HeartsDisplayProps = {
 	heartsLeft: number | null;
 	maxHearts?: number;

@@ -1,5 +1,3 @@
-'use client';
-
 type ScoreDisplayProps = {
 	score: number;
 	label?: string;

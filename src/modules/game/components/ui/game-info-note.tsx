@@ -1,5 +1,3 @@
-'use client';
-
 type GameInfoNoteProps = {
 	children: React.ReactNode;
 };
