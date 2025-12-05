@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { ProviderButton } from './provider-button';
 
 export const OAuthSection = () => {
+	const [isLoading, setIsLoading] = useState(false);
 	const [providers, setProviders] = useState<ClientSafeProvider[]>([]);
 
 	useEffect(() => {
@@ -21,7 +22,9 @@ export const OAuthSection = () => {
 	}, []);
 
 	const onClick = async (provider: ClientSafeProvider) => {
+		setIsLoading(true);
 		await signIn(provider.id, { callbackUrl: '/' });
+		setIsLoading(false);
 	};
 
 	return (
@@ -42,6 +45,7 @@ export const OAuthSection = () => {
 					<ProviderButton
 						key={p.id}
 						provider={p}
+						disabled={isLoading}
 						onClick={() => onClick(p)}
 					/>
 				))}

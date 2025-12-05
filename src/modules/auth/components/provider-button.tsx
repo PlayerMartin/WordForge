@@ -9,11 +9,13 @@ import { GitHubIcon } from './github-icon';
 
 type ProviderButtonProps = {
 	provider: ClientSafeProvider;
+	disabled: boolean;
 	onClick: () => void;
 };
 
 export const ProviderButton = ({
 	provider: { id, name },
+	disabled,
 	onClick
 }: ProviderButtonProps) => {
 	let icon: ReactNode | null = null;
@@ -30,6 +32,7 @@ export const ProviderButton = ({
 			type="button"
 			variant="outline"
 			fullWidth
+			disabled={disabled}
 			onClick={onClick}
 			leftIcon={icon}
 		>

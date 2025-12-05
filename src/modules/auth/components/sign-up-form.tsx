@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui';
 import { userSignupSchema, type UserSignupData } from '@/types';
 import { SignUp } from '@/actions/auth-actions';
+import { CardError } from '@/components/ui/card-error';
 
 import { AuthFormInput } from './auth-input';
 
@@ -20,34 +21,26 @@ export const SignUpForm = () => {
 	const router = useRouter();
 
 	const onSubmit = async (data: UserSignupData) => {
-		setError(null);
 		setIsLoading(true);
 
-		try {
-			const res = await SignUp({
-				name: data.name,
-				email: data.email,
-				password: data.password
-			});
+		const res = await SignUp({
+			name: data.name,
+			email: data.email,
+			password: data.password
+		});
 
-			if (!res.ok) {
-				setError(res.err ?? 'Something went wrong. Please try again.');
-				return;
-			}
-
-			router.push('/auth/sign-in');
-		} finally {
+		if (!res.ok) {
+			setError(res.err ?? 'Something went wrong. Please try again.');
 			setIsLoading(false);
+			return;
 		}
+
+		router.push('/auth/sign-in');
 	};
 
 	return (
 		<>
-			{error && (
-				<div className="mb-6 rounded-lg border border-error-200 bg-error-50 p-4">
-					<p className="text-sm text-error-600">{error}</p>
-				</div>
-			)}
+			{error && <CardError error={error} />}
 
 			<FormProvider {...form}>
 				<form

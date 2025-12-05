@@ -8,10 +8,12 @@ import { useState } from 'react';
 
 import { Button } from '@/components/ui';
 import { type UserSigninData, userSigninSchema } from '@/types';
+import { CardError } from '@/components/ui/card-error';
 
 import { AuthFormInput } from './auth-input';
 
 export const SignInForm = () => {
+	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const form = useForm<UserSigninData>({
 		resolver: zodResolver(userSigninSchema)
@@ -19,7 +21,7 @@ export const SignInForm = () => {
 	const router = useRouter();
 
 	const handleCredentialsSignIn = async (data: UserSigninData) => {
-		setError(null);
+		setIsLoading(true);
 
 		const res = await signIn('credentials', {
 			...data,
@@ -30,6 +32,8 @@ export const SignInForm = () => {
 			router.replace('/');
 			return;
 		}
+
+		setIsLoading(false);
 
 		switch (res.error) {
 			case 'user_not_found':
@@ -50,11 +54,8 @@ export const SignInForm = () => {
 
 	return (
 		<>
-			{error && (
-				<div className="mb-6 rounded-lg border border-error-200 bg-error-50 p-4">
-					<p className="text-sm text-error-600">{error}</p>
-				</div>
-			)}
+			{error && <CardError error={error} />}
+
 			<FormProvider {...form}>
 				<form
 					onSubmit={form.handleSubmit(handleCredentialsSignIn)}
@@ -72,7 +73,13 @@ export const SignInForm = () => {
 						type="password"
 					/>
 
-					<Button type="submit" fullWidth size="lg" className="mt-6">
+					<Button
+						type="submit"
+						disabled={isLoading}
+						fullWidth
+						size="lg"
+						className="mt-6"
+					>
 						Sign In
 					</Button>
 				</form>
