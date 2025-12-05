@@ -9,13 +9,11 @@ import { GitHubIcon } from './github-icon';
 
 type ProviderButtonProps = {
 	provider: ClientSafeProvider;
-	isLoading: boolean;
 	onClick: () => void;
 };
 
 export const ProviderButton = ({
 	provider: { id, name },
-	isLoading,
 	onClick
 }: ProviderButtonProps) => {
 	let icon: ReactNode | null = null;
@@ -33,7 +31,6 @@ export const ProviderButton = ({
 			variant="outline"
 			fullWidth
 			onClick={onClick}
-			disabled={isLoading}
 			leftIcon={icon}
 		>
 			Continue with {name}
