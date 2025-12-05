@@ -119,18 +119,6 @@ export const games = sqliteTable('games', {
 	finishedAt: integer('finished_at', { mode: 'timestamp' })
 });
 
-// WORD DICTIONARY MODELS
-
-export const words = sqliteTable('words', {
-	id: text('id')
-		.primaryKey()
-		.$defaultFn(() => crypto.randomUUID()),
-	word: text('word').notNull(),
-	language: text('language').notNull(),
-	length: integer('length').notNull(),
-	isVulgar: integer('is_vulgar', { mode: 'boolean' }).notNull().default(false)
-});
-
 // LEADERBOARD MODELS
 
 export const leaderboardEntries = sqliteTable('leaderboard_entries', {
