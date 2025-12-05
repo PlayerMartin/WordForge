@@ -1,9 +1,17 @@
-import GameClient from '@/modules/game/components/game-client';
+import { Suspense } from 'react';
+
+import GameViewport from '@/modules/game/components/game-view-port';
+
+import LoadingGame from './loading';
 
 type PageProps = {
 	params: { id: string };
 };
 
-const Game = ({ params }: PageProps) => <GameClient gameId={params.id} />;
+const GamePage = ({ params }: PageProps) => (
+	<Suspense fallback={<LoadingGame />}>
+		<GameViewport gameId={params.id} />
+	</Suspense>
+);
 
-export default Game;
+export default GamePage;

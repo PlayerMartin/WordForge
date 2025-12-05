@@ -2,6 +2,7 @@ import { type DbGame, type Language } from '@/types/game';
 
 import { getScoreForWord } from '../utils/scoring';
 import { normalizeWord } from '../utils/validation';
+import { generateChallengePart } from '../config/challange-parts';
 
 export type GameSnapshot = {
 	id: string;
@@ -10,6 +11,7 @@ export type GameSnapshot = {
 	score: number;
 	wordsUsed: string[];
 	currentLetter: string;
+	challengePart: string | null;
 };
 
 export const createSnapshotFromDb = (game: DbGame): GameSnapshot => {
@@ -17,13 +19,19 @@ export const createSnapshotFromDb = (game: DbGame): GameSnapshot => {
 	const last = words[words.length - 1];
 	const currentLetter = last ? last.slice(-1).toUpperCase() : 'A';
 
+	const challengePart =
+		game.mode === 'solo_challenge_contain_part'
+			? generateChallengePart()
+			: null;
+
 	return {
 		id: game.id,
 		mode: game.mode,
 		language: game.language,
 		score: game.score ?? 0,
 		wordsUsed: words,
-		currentLetter
+		currentLetter,
+		challengePart
 	};
 };
 

@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 
-import { validateWordLocally } from '@/modules/game/utils/validation';
+import type { Language, WordValidationResult } from '@/types';
 import type { Feedback } from '@/modules/game/components/forms/word-input-form';
-import { type Language } from '@/types';
+
+import { validateWordLocally } from '../utils/validation';
 
 import { useCheckWord } from './use-validation';
 
@@ -13,7 +14,9 @@ type UseWordInputOptions = {
 	language: Language;
 	usedWords: string[];
 	canSubmit: boolean;
+	challengePart?: string | null;
 	onValidWord: (rawInput: string) => Promise<void> | void;
+	onLocalValidationError?: (result: WordValidationResult) => void;
 };
 
 export const useWordInput = ({
@@ -21,7 +24,9 @@ export const useWordInput = ({
 	language,
 	usedWords,
 	canSubmit,
-	onValidWord
+	challengePart,
+	onValidWord,
+	onLocalValidationError
 }: UseWordInputOptions) => {
 	const [wordInput, setWordInput] = useState('');
 	const [feedback, setFeedback] = useState<Feedback>(null);
@@ -37,11 +42,14 @@ export const useWordInput = ({
 
 		const localRes = validateWordLocally({
 			rawInput: wordInput,
-			requiredLetter: currentLetter,
-			usedWords
+			startLetter: currentLetter,
+			usedWords,
+			challengePart
 		});
 
 		if (!localRes.valid) {
+			onLocalValidationError?.(localRes);
+
 			setFeedback({
 				type: 'error',
 				message: localRes.message ?? 'Invalid word'
@@ -67,7 +75,6 @@ export const useWordInput = ({
 		try {
 			await onValidWord(wordInput);
 			setWordInput('');
-			// leave feedback as whatever onValidWord decided (success, etc.)
 		} finally {
 			setIsSubmitting(false);
 		}

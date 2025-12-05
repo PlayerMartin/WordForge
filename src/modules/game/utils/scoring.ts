@@ -27,11 +27,9 @@ export const getScoreForWord = (
 			}
 			return -10000;
 		case 'solo_hidden':
-			// TODO
-			return 0;
+			return 10;
 		case 'solo_challenge_contain_part':
-			// TODO
-			return 0;
+			return 10;
 		default:
 			return 0;
 	}
