@@ -1,5 +1,8 @@
 import { Card } from '@/components/ui';
-import { GameModeConfig, GameModeId } from '@/modules/game/config/modes';
+import {
+	type GameModeConfig,
+	type GameModeId
+} from '@/modules/game/config/modes';
 
 type GameModeButtonProps = {
 	mode: GameModeConfig;

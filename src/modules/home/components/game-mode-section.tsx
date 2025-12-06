@@ -1,4 +1,5 @@
 import { GAME_MODES, type GameModeId } from '@/modules/game/config/modes';
+
 import { GameModeButton } from './game-mode-button';
 
 type GameModeSectionProps = {
@@ -17,16 +18,14 @@ const GameModeSection = ({
 			role="radiogroup"
 			aria-label="Game modes"
 		>
-			{GAME_MODES.map(mode => {
-				return (
-					<GameModeButton
-						key={mode.id}
-						mode={mode}
-						isSelected={selectedModeId === mode.id}
-						onChange={onChange}
-					/>
-				);
-			})}
+			{GAME_MODES.map(mode => (
+				<GameModeButton
+					key={mode.id}
+					mode={mode}
+					isSelected={selectedModeId === mode.id}
+					onChange={onChange}
+				/>
+			))}
 		</div>
 	</div>
 );
