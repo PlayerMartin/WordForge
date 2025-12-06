@@ -8,7 +8,7 @@ const DictionaryEntrySchema = z.object({
 });
 
 const requestWord = async (language: Language, word: string) => {
-	let lang = language === 'CZ' ? 'cs' : language.toLocaleLowerCase();
+	const lang = language === 'CZ' ? 'cs' : language.toLocaleLowerCase();
 
 	const res = await fetch(
 		`https://freedictionaryapi.com/api/v1/entries/${lang}/${word}`
