@@ -1,10 +1,5 @@
+import { SUPPORTED_LANGUAGES } from '@/modules/game/config/constants';
 import Card from '../../../components/ui/card';
-
-const LANGUAGES = [
-	{ code: 'EN', name: 'English', isReady: true },
-	{ code: 'CZ', name: 'Czech', isReady: false },
-	{ code: 'SK', name: 'Slovak', isReady: false }
-];
 
 const LanguageSection = () => (
 	<div className="mx-auto max-w-5xl text-center">
@@ -12,17 +7,17 @@ const LanguageSection = () => (
 			Multiple Languages
 		</h2>
 		<div className="flex justify-center gap-4">
-			{LANGUAGES.map(lang => (
+			{Object.values(SUPPORTED_LANGUAGES).map(lang => (
 				<Card
 					padding="sm"
-					className={`border-2 border-primary-500 bg-surface-900 px-6 ${lang.isReady ? '' : 'opacity-50'}`}
+					className={`border-2 border-primary-500 bg-surface-900 px-6 ${lang.enabled ? '' : 'opacity-50'}`}
 					key={lang.code}
 				>
 					<span className="mr-2 font-bold text-primary-400">
 						{lang.code}
 					</span>
 					<span className="font-medium text-white">{lang.name}</span>
-					{!lang.isReady && (
+					{!lang.enabled && (
 						<span className="block text-xs text-surface-400">
 							Coming soon
 						</span>

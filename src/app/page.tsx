@@ -32,7 +32,7 @@ const Home = () => {
 			const gameID = await StartGameForMode(
 				session.data.user.id,
 				selectedModeId,
-				'en'
+				'EN'
 			);
 
 			router.push(`/game/${gameID}`);
