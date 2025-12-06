@@ -1,14 +1,15 @@
-'use client';
-
 import { Card } from '@/components/ui';
 import { GAME_MODES, type GameModeId } from '@/modules/game/config/modes';
 
-type Props = {
+type GameModeSectionProps = {
 	selectedModeId: GameModeId;
 	onChange: (modeId: GameModeId) => void;
 };
 
-const GameModeSection = ({ selectedModeId, onChange }: Props) => (
+const GameModeSection = ({
+	selectedModeId,
+	onChange
+}: GameModeSectionProps) => (
 	<div>
 		<h2 className="mb-4 text-2xl font-bold text-surface-900">Game Modes</h2>
 		<div
