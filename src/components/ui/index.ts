@@ -7,5 +7,5 @@ export type { InputProps } from './Input';
 export { default as Card } from './card';
 export type { CardProps } from './card';
 
-export { default as Spinner } from './Spinner';
-export type { SpinnerProps } from './Spinner';
+export { default as Spinner } from './spinner';
+export type { SpinnerProps } from './spinner';
