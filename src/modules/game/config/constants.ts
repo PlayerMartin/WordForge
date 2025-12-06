@@ -23,7 +23,7 @@ export const GAME_SCORING = {
 
 export const SUPPORTED_LANGUAGES = {
 	EN: { code: 'EN', name: 'English', flag: '🇬🇧', enabled: true },
-	CZ: { code: 'CZ', name: 'Čeština', flag: '🇨🇿', enabled: false },
+	CZ: { code: 'CZ', name: 'Čeština', flag: '🇨🇿', enabled: true },
 	SK: { code: 'SK', name: 'Slovenčina', flag: '🇸🇰', enabled: false }
 } as const;
 
