@@ -1,5 +1,3 @@
-'use client';
-
 type FloatingLetter = {
 	letter: string;
 	size: number;
