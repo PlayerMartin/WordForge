@@ -27,3 +27,9 @@ export const userSigninSchema = z.object({
 });
 
 export type UserSigninData = z.infer<typeof userSigninSchema>;
+
+export type UserDetails = {
+	username: string;
+	email: string;
+	createdAt: Date;
+};
