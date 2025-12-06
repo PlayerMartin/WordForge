@@ -8,8 +8,10 @@ const DictionaryEntrySchema = z.object({
 });
 
 const requestWord = async (language: Language, word: string) => {
+	const lang = language === 'CZ' ? 'cs' : language.toLocaleLowerCase();
+
 	const res = await fetch(
-		`https://freedictionaryapi.com/api/v1/entries/${language}/${word}`
+		`https://freedictionaryapi.com/api/v1/entries/${lang}/${word}`
 	);
 
 	if (res.status >= 500 && res.status < 600) {

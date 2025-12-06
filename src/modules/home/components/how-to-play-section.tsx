@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { Card } from '@/components/ui';
-import FloatingLettersBackground from '@/components/ui/floating-letters-background';
+import { FloatingLettersBackground } from '@/components/ui/floating-letters-background';
 
 const RULES = [
 	{
