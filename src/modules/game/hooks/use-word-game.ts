@@ -97,16 +97,15 @@ export const useWordGame = (game: DbGame) => {
 	const handleLocalValidationError = (result: WordValidationResult) => {
 		if (heartsLeft === null) return;
 		if (result.error !== 'already_used') return;
+		//Fixed BUG that is in the issiue
+		const nextHearts = heartsLeft - 1;
 
-		setHeartsLeft(prev => {
-			if (prev === null) return prev;
-			const next = prev - 1;
-			if (next <= 0) {
-				endGame();
-				return 0;
-			}
-			return next;
-		});
+		if (nextHearts <= 0) {
+			setHeartsLeft(0);
+			endGame();
+		} else {
+			setHeartsLeft(nextHearts);
+		}
 	};
 
 	const challengePart = usesChallengePart ? snapshot.challengePart : null;
