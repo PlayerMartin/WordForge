@@ -2,6 +2,7 @@
 
 import { SUPPORTED_LANGUAGES } from '@/modules/game/config/constants';
 import { useLanguageContext } from '@/components/utils/language-provider';
+
 import { LanguageButton } from './language-button';
 
 const LanguageSection = () => {

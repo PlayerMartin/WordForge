@@ -1,14 +1,16 @@
 'use client';
 
-import { Button } from '@/components/ui';
-import GameModeSection from './game-mode-section';
-import HowToPlaySection from './how-to-play-section';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
-import { GameModeId } from '@/modules/game/config/modes';
-import { StartGameForMode } from '@/actions/game-actions';
 import { useRouter } from 'next/navigation';
+
+import { type GameModeId } from '@/modules/game/config/modes';
+import { StartGameForMode } from '@/actions/game-actions';
+import { Button } from '@/components/ui';
 import { useLanguageContext } from '@/components/utils/language-provider';
+
+import HowToPlaySection from './how-to-play-section';
+import GameModeSection from './game-mode-section';
 
 export const GameStartSection = () => {
 	const router = useRouter();

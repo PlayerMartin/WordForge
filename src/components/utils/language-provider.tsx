@@ -1,7 +1,13 @@
 'use client';
 
-import { Language } from '@/types';
-import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import {
+	createContext,
+	type PropsWithChildren,
+	useContext,
+	useState
+} from 'react';
+
+import { type Language } from '@/types';
 
 type LanguageContextValue = {
 	language: Language;
