@@ -21,11 +21,19 @@ const LanguageSection = () => {
 								setLanguage(lang.code);
 							}
 						}}
-						className=""
+						disabled={!lang.enabled}
 					>
 						<Card
 							padding="sm"
-							className={`${lang.code === language ? 'border-2 border-primary-500' : 'border-1 border-surface-900'} bg-surface-900 px-6 ${lang.enabled ? '' : 'opacity-50'}`}
+							className={`px-6 transition-all ${
+								lang.code === language
+									? 'scale-105 border-2 border-primary-500 bg-surface-800 ring-1 ring-primary-400/30'
+									: 'border border-surface-900 bg-surface-900'
+							} ${
+								lang.enabled
+									? ''
+									: 'opacity-40 saturate-50 backdrop-blur-[1px]'
+							} `}
 							key={lang.code}
 						>
 							<span className="mr-2 font-bold text-primary-400">
