@@ -72,4 +72,3 @@ export const GAME_MODE_BY_ID: Record<GameModeId, GameModeConfig> =
 	>;
 
 export type GameDbMode = (typeof GAME_MODES)[number]['dbMode'];
-

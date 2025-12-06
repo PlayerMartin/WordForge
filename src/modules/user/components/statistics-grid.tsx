@@ -21,7 +21,9 @@ const StatisticsGrid = async ({ userId }: { userId: string }) => {
 					<p className="text-3xl font-bold text-primary-600">
 						{gamesPlayed}
 					</p>
-					<p className="text-sm text-surface-500">Total Games Played</p>
+					<p className="text-sm text-surface-500">
+						Total Games Played
+					</p>
 				</Card>
 				<Card className="text-center">
 					<p className="text-3xl font-bold text-secondary-600">

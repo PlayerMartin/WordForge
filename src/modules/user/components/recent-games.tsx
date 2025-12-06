@@ -23,7 +23,7 @@ const RecentGames = async ({ userId }: { userId: string }) => {
 	return (
 		<div>
 			<h2 className="mb-2 text-xl font-bold">Recent Games</h2>
-			<Card padding='sm'>
+			<Card padding="sm">
 				<div className="divide-y divide-surface-200">
 					{games.map(game => (
 						<div
@@ -44,7 +44,7 @@ const RecentGames = async ({ userId }: { userId: string }) => {
 										: 'Unknown'}
 								</p>
 							</div>
-							<div className='flex items-center justify-between gap-6'>
+							<div className="flex items-center justify-between gap-6">
 								<span className="text-md font-bold text-primary-600">
 									Score: {game.score}
 								</span>
@@ -57,10 +57,10 @@ const RecentGames = async ({ userId }: { userId: string }) => {
 								<span
 									className={`rounded-full px-2 py-2 text-xs ${
 										game.finishedAt
-										? 'bg-success-100 text-success-600'
-										: 'bg-warning-100 text-warning-600'
+											? 'bg-success-100 text-success-600'
+											: 'bg-warning-100 text-warning-600'
 									}`}
-									>
+								>
 									{game.finishedAt ? 'Finished' : 'DNF'}
 								</span>
 							</div>
