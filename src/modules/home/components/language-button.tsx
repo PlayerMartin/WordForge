@@ -33,13 +33,11 @@ export const LanguageButton = ({
 				</span>
 			</div>
 			<div>
-				{!enabled &&
-					<span
-					className='text-xs text-white text-opacity-50'
-					>
+				{!enabled && (
+					<span className="text-xs text-white text-opacity-50">
 						Coming soon
 					</span>
-				}
+				)}
 			</div>
 		</Card>
 	</button>

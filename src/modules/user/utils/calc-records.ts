@@ -1,4 +1,4 @@
-import { DbGame } from "@/types";
+import { type DbGame } from '@/types';
 
 export const getLongestWord = (games: DbGame[]): string =>
 	games.reduce((longest, g) => {
@@ -7,8 +7,7 @@ export const getLongestWord = (games: DbGame[]): string =>
 			if (w.length > longest.length) longest = w;
 		}
 		return longest;
-	}, '???'
-);
+	}, '???');
 
 export const getMostWordsInGame = (games: DbGame[]): number =>
 	games.reduce((max, g) => Math.max(max, g.wordsUsed?.length ?? 0), 0);
