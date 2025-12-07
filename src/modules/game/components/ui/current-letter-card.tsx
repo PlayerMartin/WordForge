@@ -46,8 +46,8 @@ const CurrentLetterCard = ({
 					<p className="mb-1 text-xs font-semibold uppercase tracking-wide text-surface-400">
 						Contain
 					</p>
-					<div className="mx-auto flex h-16 w-24 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-400 to-primary-500">
-						<span className="text-2xl font-bold text-white">
+					<div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-400 to-secondary-400">
+						<span className="text-3xl font-bold text-white">
 							{challengePart}
 						</span>
 					</div>

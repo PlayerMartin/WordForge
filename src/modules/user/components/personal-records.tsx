@@ -1,5 +1,5 @@
 import { GetRecentGamesForUser } from '@/actions/game-actions';
-import { Card } from '@/components/ui';
+import { StatCard } from '@/components/ui';
 import { type DbGame } from '@/types';
 
 import {
@@ -34,32 +34,30 @@ const PersonalRecords = async ({
 				Personal Records - {language}
 			</h2>
 			<div className="grid gap-4 md:grid-cols-2">
-				<Card>
-					<p className="text-sm text-surface-500">Longest Word</p>
-					<p className="text-lg font-semibold">{longestWord}</p>
-				</Card>
-				<Card>
-					<p className="text-sm text-surface-500">
-						Most Words in Game
-					</p>
-					<p className="text-lg font-semibold">{mostWordsInGame}</p>
-				</Card>
-				<Card>
-					<p className="text-sm text-surface-500">
-						Average Words per Game
-					</p>
-					<p className="text-lg font-semibold">
-						{averageWordsPerGame}
-					</p>
-				</Card>
-				<Card>
-					<p className="text-sm text-surface-500">
-						Average Score per Game
-					</p>
-					<p className="text-lg font-semibold">
-						{averageScorePerGame}
-					</p>
-				</Card>
+				<StatCard
+					value={longestWord}
+					label="Longest Word"
+					size="sm"
+					colorClass="default"
+				/>
+				<StatCard
+					value={mostWordsInGame}
+					label="Most Words in Game"
+					size="sm"
+					colorClass="default"
+				/>
+				<StatCard
+					value={averageWordsPerGame}
+					label="Average Words per Game"
+					size="sm"
+					colorClass="default"
+				/>
+				<StatCard
+					value={averageScorePerGame}
+					label="Average Score per Game"
+					size="sm"
+					colorClass="default"
+				/>
 			</div>
 		</div>
 	);
