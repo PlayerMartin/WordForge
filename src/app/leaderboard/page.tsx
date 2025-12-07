@@ -28,7 +28,7 @@ const LeaderboardPage = async ({ searchParams }: LeaderboardPageProps) => {
 
 	const language = VALID_LANGUAGES.includes(params.language as Language)
 		? (params.language as Language)
-		: 'en';
+		: 'EN';
 
 	return (
 		<div className="container mx-auto px-4 py-8">
