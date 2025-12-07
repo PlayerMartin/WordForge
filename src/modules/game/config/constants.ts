@@ -22,9 +22,9 @@ export const GAME_SCORING = {
 } as const;
 
 export const SUPPORTED_LANGUAGES = {
-	EN: { code: 'en', name: 'English', flag: '🇬🇧', enabled: true },
-	CZ: { code: 'cz', name: 'Čeština', flag: '🇨🇿', enabled: false },
-	SK: { code: 'sk', name: 'Slovenčina', flag: '🇸🇰', enabled: false }
+	EN: { code: 'EN', name: 'English', flag: '🇬🇧', enabled: true },
+	CZ: { code: 'CZ', name: 'Čeština', flag: '🇨🇿', enabled: true },
+	SK: { code: 'SK', name: 'Slovenčina', flag: '🇸🇰', enabled: false }
 } as const;
 
 export type LanguageCode =

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { Card } from '@/components/ui';
-import FloatingLettersBackground from '@/components/ui/floating-letters-background';
+import { FloatingLettersBackground } from '@/components/ui/floating-letters-background';
 
 const RULES = [
 	{
@@ -21,7 +21,7 @@ const RULES = [
 		step: 3,
 		title: 'Chain It',
 		description:
-			'The last letter of your word becomes the next starting letter!'
+			'The last letter of your word becomes the next start letter!'
 	}
 ];
 

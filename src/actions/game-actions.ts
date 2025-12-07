@@ -13,7 +13,7 @@ export const GetGame = async (gameId: string) =>
 export const StartGameForMode = async (
 	userId: string,
 	modeId: GameModeId,
-	language: Language = 'en'
+	language: Language = 'EN'
 ) => {
 	const modeConfig = GAME_MODE_BY_ID[modeId];
 

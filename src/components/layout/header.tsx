@@ -26,6 +26,7 @@ const Header = () => {
 					{session.data?.user && (
 						<Link
 							href="/profile"
+							prefetch={false}
 							className="transition-colors hover:text-primary-600"
 						>
 							Profile

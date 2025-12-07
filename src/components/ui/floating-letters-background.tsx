@@ -24,7 +24,7 @@ type FloatingLettersBackgroundProps = {
 	letters?: FloatingLetter[];
 };
 
-const FloatingLettersBackground = ({
+export const FloatingLettersBackground = ({
 	letters = DEFAULT_FLOATING_LETTERS
 }: FloatingLettersBackgroundProps) => (
 	<div className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -37,7 +37,9 @@ const FloatingLettersBackground = ({
 					left: `${item.left}%`,
 					top: `${item.top}%`,
 					animationDelay: `${item.delay}s`,
-					animationDuration: `${item.duration}s`
+					animationDuration: `${item.duration}s`,
+					transform: 'translateY(0)',
+					animationFillMode: 'both'
 				}}
 			>
 				{item.letter}
@@ -45,6 +47,3 @@ const FloatingLettersBackground = ({
 		))}
 	</div>
 );
-
-export default FloatingLettersBackground;
-export type { FloatingLetter };
