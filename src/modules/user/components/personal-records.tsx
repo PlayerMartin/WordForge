@@ -37,15 +37,15 @@ const PersonalRecords = async ({ userId }: { userId: string }) => {
 	)) as DbGame[];
 
 	// TODO - prepinani jazyku a podle toho menit
-	const longestWord = getLongestWord(games.filter(g => g.language === 'en'));
+	const longestWord = getLongestWord(games.filter(g => g.language === 'EN'));
 	const mostWordsInGame = getMostWordsInGame(
-		games.filter(g => g.language === 'en')
+		games.filter(g => g.language === 'EN')
 	);
 	const averageWordsPerGame = getAverageWPG(
-		games.filter(g => g.language === 'en')
+		games.filter(g => g.language === 'EN')
 	);
 	const averageScorePerGame = getAverageScorePerGame(
-		games.filter(g => g.language === 'en')
+		games.filter(g => g.language === 'EN')
 	);
 
 	return (

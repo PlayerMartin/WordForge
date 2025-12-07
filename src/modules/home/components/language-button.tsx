@@ -24,12 +24,23 @@ export const LanguageButton = ({
 					: 'border border-surface-900 bg-surface-900'
 			} ${enabled ? '' : 'opacity-40 saturate-50 backdrop-blur-[1px]'} `}
 		>
-			<span className="mr-2 font-bold text-primary-400">{code}</span>
-			<span
-				className={`font-medium text-white ${enabled ? '' : 'text-opacity-50'}`}
-			>
-				{name}
-			</span>
+			<div>
+				<span className="mr-2 font-bold text-primary-400">{code}</span>
+				<span
+					className={`font-medium text-white ${enabled ? '' : 'text-opacity-50'}`}
+				>
+					{name}
+				</span>
+			</div>
+			<div>
+				{!enabled &&
+					<span
+					className='text-xs text-white text-opacity-50'
+					>
+						Coming soon
+					</span>
+				}
+			</div>
 		</Card>
 	</button>
 );
