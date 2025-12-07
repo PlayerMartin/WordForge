@@ -12,6 +12,7 @@ export type GameModeId =
 export type GameModeConfig = {
 	id: GameModeId;
 	title: string;
+	filterLabel: string;
 	description: string;
 	borderColor: string;
 
@@ -25,6 +26,7 @@ export const GAME_MODES: GameModeConfig[] = [
 	{
 		id: 'tempo',
 		title: 'Tempo Mode',
+		filterLabel: 'Tempo',
 		description: 'The faster you answer, the more points you earn.',
 		borderColor: 'border-l-primary-500',
 
@@ -35,6 +37,7 @@ export const GAME_MODES: GameModeConfig[] = [
 	{
 		id: 'length',
 		title: 'Length Mode',
+		filterLabel: 'Length',
 		description: 'Longer words give more points. Think big.',
 		borderColor: 'border-l-secondary-500',
 
@@ -45,6 +48,7 @@ export const GAME_MODES: GameModeConfig[] = [
 	{
 		id: 'hidden',
 		title: 'Hidden Mode',
+		filterLabel: 'Hidden',
 		description:
 			"You can't see used words, have 3 lives, and can't repeat words.",
 		borderColor: 'border-l-warning-500',
@@ -56,6 +60,7 @@ export const GAME_MODES: GameModeConfig[] = [
 	{
 		id: 'challenge_contain_part',
 		title: 'Challenge: Contains Part',
+		filterLabel: 'Challenge',
 		description: 'Each word must contain a given letter or substring.',
 		borderColor: 'border-l-success-500',
 
