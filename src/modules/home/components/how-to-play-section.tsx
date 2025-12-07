@@ -21,7 +21,7 @@ const RULES = [
 		step: 3,
 		title: 'Chain It',
 		description:
-			'The last letter of your word becomes the next starting letter!'
+			'The last letter of your word becomes the next start letter!'
 	}
 ];
 

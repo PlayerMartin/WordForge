@@ -63,7 +63,7 @@ export const GAME_MODES: GameModeConfig[] = [
 		defaultTurnTimeLimit: -1,
 		defaultGlobalTimeLimit: -1
 	}
-] as const;
+];
 
 export const GAME_MODE_BY_ID: Record<GameModeId, GameModeConfig> =
 	Object.fromEntries(GAME_MODES.map(m => [m.id, m])) as Record<
