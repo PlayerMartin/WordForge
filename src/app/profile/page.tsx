@@ -20,8 +20,8 @@ const Page = async () => {
 		<div className="mx-auto mt-4 max-w-5xl space-y-8">
 			<HeaderCard userId={userId} />
 			<StatisticsGrid userId={userId} />
-			<PersonalRecords userId={userId} language='EN'/>
-			<PersonalRecords userId={userId} language='CZ'/>
+			<PersonalRecords userId={userId} language="EN" />
+			<PersonalRecords userId={userId} language="CZ" />
 			<RecentGames userId={userId} />
 		</div>
 	);

@@ -1,9 +1,21 @@
 import { GetRecentGamesForUser } from '@/actions/game-actions';
 import { Card } from '@/components/ui';
 import { type DbGame } from '@/types';
-import { getLongestWord, getAverageScorePerGame, getAverageWPG, getMostWordsInGame } from '../utils/calc-records';
 
-const PersonalRecords = async ({ userId, language }: { userId: string, language:string }) => {
+import {
+	getLongestWord,
+	getAverageScorePerGame,
+	getAverageWPG,
+	getMostWordsInGame
+} from '../utils/calc-records';
+
+const PersonalRecords = async ({
+	userId,
+	language
+}: {
+	userId: string;
+	language: string;
+}) => {
 	const games = (await GetRecentGamesForUser(
 		userId,
 		Number.MAX_SAFE_INTEGER
@@ -18,7 +30,9 @@ const PersonalRecords = async ({ userId, language }: { userId: string, language:
 
 	return (
 		<div>
-			<h2 className="mb-2 text-xl font-bold">Personal Records - {language}</h2>
+			<h2 className="mb-2 text-xl font-bold">
+				Personal Records - {language}
+			</h2>
 			<div className="grid gap-4 md:grid-cols-2">
 				<Card>
 					<p className="text-sm text-surface-500">Longest Word</p>
