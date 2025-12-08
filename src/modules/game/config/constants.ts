@@ -2,7 +2,7 @@
 // GAME CONSTANTS (module-scoped)
 // ============================================
 
-import z from 'zod';
+import { z } from 'zod';
 
 // Timers
 export const GAME_TIMERS = {
