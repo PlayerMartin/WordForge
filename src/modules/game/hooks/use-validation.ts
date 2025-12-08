@@ -3,6 +3,8 @@ import { z } from 'zod';
 
 import { type Language } from '@/types';
 
+import { WORDS_API } from '../config/constants';
+
 const DictionaryEntrySchema = z.object({
 	entries: z.array(z.unknown())
 });
@@ -10,9 +12,7 @@ const DictionaryEntrySchema = z.object({
 const requestWord = async (language: Language, word: string) => {
 	const lang = language === 'CZ' ? 'cs' : language.toLocaleLowerCase();
 
-	const res = await fetch(
-		`https://freedictionaryapi.com/api/v1/entries/${lang}/${word}`
-	);
+	const res = await fetch(`${WORDS_API}${lang}/${word}`);
 
 	if (res.status >= 500 && res.status < 600) {
 		return { ok: false, msg: 'Validation API not reachable' };
