@@ -31,4 +31,5 @@ export type LanguageCode =
 	(typeof SUPPORTED_LANGUAGES)[keyof typeof SUPPORTED_LANGUAGES]['code'];
 
 // APIs
-export const WORDS_API = `https://freedictionaryapi.com/api/v1/entries/`;
+export const WORDS_API = (language: string, word: string) =>
+	`https://freedictionaryapi.com/api/v1/entries/${language}/${word}`;

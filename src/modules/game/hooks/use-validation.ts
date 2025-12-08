@@ -12,7 +12,7 @@ const DictionaryEntrySchema = z.object({
 const requestWord = async (language: Language, word: string) => {
 	const lang = language === 'CZ' ? 'cs' : language.toLocaleLowerCase();
 
-	const res = await fetch(`${WORDS_API}${lang}/${word}`);
+	const res = await fetch(WORDS_API(lang, word));
 
 	if (res.status >= 500 && res.status < 600) {
 		return { ok: false, msg: 'Validation API not reachable' };
