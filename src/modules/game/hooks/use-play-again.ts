@@ -24,6 +24,8 @@ export const usePlayAgain = (game: DbGame) => {
 			);
 
 			router.push(`/game/${newGameId}`);
+		} catch {
+			console.error('Could not start game');
 		} finally {
 			setIsStarting(false);
 		}
