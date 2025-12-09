@@ -1,27 +1,80 @@
 # WordForge
-WordForge je rýchla a znovuhrateľná slovná hra pre web, kde hráč v sóle preteká s časom a skladá platné slová podľa pravidla "posledné písmeno -> prvé písmeno". MVP je sólo slovný futbal s viacerými spôsobmi skórovania, jazykmi a rebríčkami. Potom pridáme ťahové PvP a coop na rovnakom jadre. 
 
-============================================
+Webová slovná hra, kde hráč skladá slová podľa pravidla "posledné písmeno → prvé písmeno" ničo ako slovný futbal.
 
-INŠTALÁCIA BALÍČKOV
+## Špecifikácia
 
-============================================
+### Herné módy (sólo)
 
-**1. Spustit:**
+| Mód | Popis |
+|-----|-------|
+| **Tempo** | Body za rýchlosť - čím rýchlejšia odpoveď, tým viac bodov |
+| **Length** | Body za dĺžku slova - exponenciálne skórovanie (2^dĺžka) |
+| **Hidden** | 3 životy, nevidíš použité slová |
+| **Challenge** | Slovo musí obsahovať zadané písmeno/reťazec |
 
-	    npm install
+### Hlavné funkcie
 
-**2. Doinštalujte voliteľné balíčky podľa potreby**
+- Validácia slov cez externé slovníkové API
+- Časovač na ťah (10s) a celkovú hru (5min pre tempo)
+- Viacjazyčná podpora (EN, CZ)
+- Rebríčky podľa módu a jazyka
+- Štatistiky hráča
 
-**3. Po inštalácii:**
+### Autentifikácia
 
-- Vytvorte .env súbor
+- Email/heslo registrácia
+- GitHub OAuth
+- JWT session (7 dní)
 
-	    TURSO_DATABASE_URL="file:./dev.db"
-		TURSO_AUTH_TOKEN=""
-		NEXTAUTH_URL="http://localhost:3000/"
-		NEXTAUTH_SECRET="nejaky-nahodny-string-min-32-znakov,nejaky-nahodny-string-min-32-znakov"
+## Tech stack
 
-- Vytvorte db
+| Vrstva | Technológia |
+|--------|-------------|
+| Framework | Next.js 15, React 19, TypeScript |
+| Styling | Tailwind CSS |
+| Databáza | LibSQL (SQLite) + Drizzle ORM |
+| Auth | NextAuth.js + bcryptjs |
 
-		npm run db:push
+## Štruktúra projektu
+
+```
+/src
+├── /actions         Server actions (game, auth, leaderboard, user)
+├── /app             Next.js app router
+├── /components      UI komponenty
+├── /lib             DB schema, auth config, utils
+├── /modules         Feature moduly (game, auth, leaderboard, user)
+└── /types           TypeScript definície
+```
+
+## Inštalácia
+
+```bash
+npm install
+```
+
+### Konfigurácia (.env)
+
+```env
+TURSO_DATABASE_URL="file:./dev.db"
+TURSO_AUTH_TOKEN=""
+NEXTAUTH_URL="http://localhost:3000/"
+NEXTAUTH_SECRET="nejaky-nahodny-string-min-32-znakov"
+```
+
+### Databáza
+
+```bash
+npm run db:push
+```
+
+## Skripty
+
+| Príkaz | Popis |
+|--------|-------|
+| `npm run dev` | Spustí dev server |
+| `npm run build` | Produkčný build |
+| `npm run db:push` | Push schémy do DB |
+| `npm run db:generate` | Generovanie migrácií |
+| `npm run lint` | Lint check |
