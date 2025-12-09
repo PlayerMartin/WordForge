@@ -1,6 +1,6 @@
 # WordForge
 
-Webová slovná hra, kde hráč skladá slová podľa pravidla "posledné písmeno → prvé písmeno" ničo ako slovný futbal.
+Webová slovná hra, kde hráč skladá slová podľa pravidla "posledné písmeno na prvé písmeno" ničo ako slovný futbal.
 
 ## Špecifikácia
 
