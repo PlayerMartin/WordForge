@@ -9,6 +9,7 @@ import { Button } from '@/components/ui';
 import { userSignupSchema, type UserSignupData } from '@/types';
 import { SignUp } from '@/actions/auth-actions';
 import { CardError } from '@/components/ui/card-error';
+import { AUTH_ERRORS } from '@/constants/error-messages';
 
 import { AuthFormInput } from './auth-input';
 
@@ -30,7 +31,7 @@ export const SignUpForm = () => {
 		});
 
 		if (!res.ok) {
-			setError(res.err ?? 'Something went wrong. Please try again.');
+			setError(res.err ?? AUTH_ERRORS.GENERIC);
 			setIsLoading(false);
 			return;
 		}

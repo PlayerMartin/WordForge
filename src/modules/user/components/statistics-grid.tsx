@@ -1,5 +1,5 @@
 import { GetRecentGamesForUser } from '@/actions/game-actions';
-import { Card } from '@/components/ui';
+import { StatCard } from '@/components/ui';
 import { type DbGame } from '@/types';
 
 const StatisticsGrid = async ({ userId }: { userId: string }) => {
@@ -17,32 +17,26 @@ const StatisticsGrid = async ({ userId }: { userId: string }) => {
 		<div>
 			<h2 className="mb-2 text-xl font-bold">Statistics</h2>
 			<div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-				<Card className="text-center">
-					<p className="text-3xl font-bold text-primary-600">
-						{gamesPlayed}
-					</p>
-					<p className="text-sm text-surface-500">
-						Total Games Played
-					</p>
-				</Card>
-				<Card className="text-center">
-					<p className="text-3xl font-bold text-secondary-600">
-						{totalScore}
-					</p>
-					<p className="text-sm text-surface-500">Total Score</p>
-				</Card>
-				<Card className="text-center">
-					<p className="text-3xl font-bold text-accent-600">
-						{totalWords}
-					</p>
-					<p className="text-sm text-surface-500">Total Words Used</p>
-				</Card>
-				<Card className="text-center">
-					<p className="text-3xl font-bold text-warning-600">
-						{bestScore}
-					</p>
-					<p className="text-sm text-surface-500">Best Score</p>
-				</Card>
+				<StatCard
+					value={gamesPlayed}
+					label="Total Games Played"
+					colorClass="primary"
+				/>
+				<StatCard
+					value={totalScore}
+					label="Total Score"
+					colorClass="secondary"
+				/>
+				<StatCard
+					value={totalWords}
+					label="Total Words Used"
+					colorClass="accent"
+				/>
+				<StatCard
+					value={bestScore}
+					label="Best Score"
+					colorClass="warning"
+				/>
 			</div>
 		</div>
 	);

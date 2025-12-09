@@ -32,7 +32,7 @@ export const LanguageButton = ({
 					{name}
 				</span>
 			</div>
-			<div>
+			<div className="h-4">
 				{!enabled && (
 					<span className="text-xs text-white text-opacity-50">
 						Coming soon

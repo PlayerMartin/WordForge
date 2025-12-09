@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui';
 import { type UserSigninData, userSigninSchema } from '@/types';
 import { CardError } from '@/components/ui/card-error';
+import { AUTH_ERRORS } from '@/constants/error-messages';
 
 import { AuthFormInput } from './auth-input';
 
@@ -37,18 +38,16 @@ export const SignInForm = () => {
 
 		switch (res.error) {
 			case 'user_not_found':
-				setError('User does not exist');
+				setError(AUTH_ERRORS.USER_NOT_FOUND);
 				break;
 			case 'invalid_password':
-				setError('Incorrect password');
+				setError(AUTH_ERRORS.INVALID_PASSWORD);
 				break;
 			case 'provider_account':
-				setError(
-					'This account uses social login. Please sign in with GitHub.'
-				);
+				setError(AUTH_ERRORS.PROVIDER_ACCOUNT);
 				break;
 			default:
-				setError('Something went wrong. Please try again.');
+				setError(AUTH_ERRORS.GENERIC);
 		}
 	};
 
