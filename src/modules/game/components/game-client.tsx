@@ -50,10 +50,11 @@ const GameClient = ({ game }: Props) => {
 					{wordCount === 1 ? 'word' : 'words'}.
 				</GameInfoNote>
 
-				<div className="mt-6 flex justify-center">
+				<div className="mt-10 flex justify-center">
 					<Button
 						type="button"
 						variant="primary"
+						className="px-8 py-3 text-lg"
 						onClick={isStarting ? undefined : handlePlayAgain}
 						disabled={isStarting}
 					>

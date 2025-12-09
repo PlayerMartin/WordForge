@@ -1,6 +1,6 @@
 'use server';
 
-import { GAME_MODE_BY_ID, type GameModeId } from '@/modules/game/config/modes';
+import { type GameModeId } from '@/modules/game/config/modes';
 import { type Language } from '@/types';
 import * as leaderboardRepository from '@/modules/leaderboard/repositories/leaderboard-repository';
 import {
@@ -10,6 +10,7 @@ import {
 	ValidateNumber,
 	ValidateString
 } from '@/lib/utils/validation';
+import { getValidatedModeConfig } from '@/modules/game/utils/mode-validation';
 
 export const GetLeaderboard = async (
 	modeId: GameModeId,
@@ -21,11 +22,7 @@ export const GetLeaderboard = async (
 		throw new Error(`Invalid language code`);
 	if (!ValidateNumber(limit)) throw new Error(`Invalid limit`);
 
-	const modeConfig = GAME_MODE_BY_ID[modeId];
-
-	if (!modeConfig) {
-		throw new Error(`Invalid game mode: ${modeId}`);
-	}
+	const modeConfig = getValidatedModeConfig(modeId);
 
 	return await leaderboardRepository.GetTopScores(
 		modeConfig.dbMode,
@@ -44,11 +41,7 @@ export const GetUserBestScore = async (
 	if (!ValidateLanguageCode(language))
 		throw new Error(`Invalid language code`);
 
-	const modeConfig = GAME_MODE_BY_ID[modeId];
-
-	if (!modeConfig) {
-		throw new Error(`Invalid game mode: ${modeId}`);
-	}
+	const modeConfig = getValidatedModeConfig(modeId);
 
 	return await leaderboardRepository.GetUserBestScore(
 		userId,
@@ -67,11 +60,7 @@ export const GetUserRankAndEntry = async (
 	if (!ValidateLanguageCode(language))
 		throw new Error(`Invalid language code`);
 
-	const modeConfig = GAME_MODE_BY_ID[modeId];
-
-	if (!modeConfig) {
-		throw new Error(`Invalid game mode: ${modeId}`);
-	}
+	const modeConfig = getValidatedModeConfig(modeId);
 
 	return await leaderboardRepository.GetUserRankAndEntry(
 		userId,
@@ -98,11 +87,7 @@ export const SubmitScore = async (data: {
 	if (data.longestWord && !ValidateString(data.longestWord))
 		throw new Error(`Invalid longest word`);
 
-	const modeConfig = GAME_MODE_BY_ID[data.modeId];
-
-	if (!modeConfig) {
-		throw new Error(`Invalid game mode: ${data.modeId}`);
-	}
+	const modeConfig = getValidatedModeConfig(data.modeId);
 
 	const existingEntry = await leaderboardRepository.GetUserBestScore(
 		data.userId,
