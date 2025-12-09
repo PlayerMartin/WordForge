@@ -1,8 +1,7 @@
 'use server';
 
-import { eq } from 'drizzle-orm';
-
-import { db, users } from '@/lib/db';
+import { ValidateId } from '@/lib/utils/validation';
+import * as userRepository from '@/modules/user/repositories/user-repository';
 import { type UserDetails } from '@/types';
 
 export const GetUserDetailsByIdAction = async (
@@ -10,7 +9,16 @@ export const GetUserDetailsByIdAction = async (
 ): Promise<{
 	user: UserDetails;
 }> => {
-	const res = await db.select().from(users).where(eq(users.id, userId));
+	if (!ValidateId(userId))
+		return {
+			user: {
+				username: 'InvalidUserId',
+				email: 'No email',
+				createdAt: new Date()
+			}
+		};
+
+	const res = await userRepository.FindById(userId);
 
 	if (res.length !== 1) {
 		return {

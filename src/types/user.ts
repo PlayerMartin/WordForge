@@ -1,10 +1,12 @@
 import { z } from 'zod';
 
-export type User = {
-	name: string;
-	email: string;
-	password: string;
-};
+export const userSchema = z.object({
+	name: z.string().min(3, 'Username must be longer than 2 characters'),
+	email: z.string().email('Invalid email address'),
+	password: z.string().min(3, 'Password must be at least 3 characters')
+});
+
+export type User = z.infer<typeof userSchema>;
 
 // AUTH
 export const userSignupSchema = z

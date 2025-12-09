@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import { type games } from '@/lib/db/schema';
 import { type GameDbMode } from '@/modules/game/config/modes';
 import { type LanguageCode } from '@/modules/game/config/constants';
@@ -27,3 +29,10 @@ export type WordValidationResult = {
 		| 'many_words';
 	message?: string;
 };
+
+export const GameProgressSchema = z.object({
+	score: z.number(),
+	wordsUsed: z.array(z.string())
+});
+
+export type GameProgress = z.infer<typeof GameProgressSchema>;

@@ -3,6 +3,13 @@
 import { type GameModeId } from '@/modules/game/config/modes';
 import { type Language } from '@/types';
 import * as leaderboardRepository from '@/modules/leaderboard/repositories/leaderboard-repository';
+import {
+	ValidateGameModeId,
+	ValidateId,
+	ValidateLanguageCode,
+	ValidateNumber,
+	ValidateString
+} from '@/lib/utils/validation';
 import { getValidatedModeConfig } from '@/modules/game/utils/mode-validation';
 
 export const GetLeaderboard = async (
@@ -10,6 +17,11 @@ export const GetLeaderboard = async (
 	language: Language,
 	limit = 10
 ) => {
+	if (!ValidateGameModeId(modeId)) throw new Error(`Invalid game mode id`);
+	if (!ValidateLanguageCode(language))
+		throw new Error(`Invalid language code`);
+	if (!ValidateNumber(limit)) throw new Error(`Invalid limit`);
+
 	const modeConfig = getValidatedModeConfig(modeId);
 
 	return await leaderboardRepository.GetTopScores(
@@ -24,6 +36,11 @@ export const GetUserBestScore = async (
 	modeId: GameModeId,
 	language: Language
 ) => {
+	if (!ValidateId(userId)) throw new Error(`Invalid user id`);
+	if (!ValidateGameModeId(modeId)) throw new Error(`Invalid game mode id`);
+	if (!ValidateLanguageCode(language))
+		throw new Error(`Invalid language code`);
+
 	const modeConfig = getValidatedModeConfig(modeId);
 
 	return await leaderboardRepository.GetUserBestScore(
@@ -38,6 +55,11 @@ export const GetUserRankAndEntry = async (
 	modeId: GameModeId,
 	language: Language
 ) => {
+	if (!ValidateId(userId)) throw new Error(`Invalid user id`);
+	if (!ValidateGameModeId(modeId)) throw new Error(`Invalid game mode id`);
+	if (!ValidateLanguageCode(language))
+		throw new Error(`Invalid language code`);
+
 	const modeConfig = getValidatedModeConfig(modeId);
 
 	return await leaderboardRepository.GetUserRankAndEntry(
@@ -55,6 +77,16 @@ export const SubmitScore = async (data: {
 	wordCount: number;
 	longestWord?: string;
 }) => {
+	if (!ValidateId(data.userId)) throw new Error(`Invalid user id`);
+	if (!ValidateGameModeId(data.modeId))
+		throw new Error(`Invalid game mode id`);
+	if (!ValidateLanguageCode(data.language))
+		throw new Error(`Invalid language code`);
+	if (!ValidateNumber(data.score)) throw new Error(`Invalid score`);
+	if (!ValidateNumber(data.wordCount)) throw new Error(`Invalid word count`);
+	if (data.longestWord && !ValidateString(data.longestWord))
+		throw new Error(`Invalid longest word`);
+
 	const modeConfig = getValidatedModeConfig(data.modeId);
 
 	const existingEntry = await leaderboardRepository.GetUserBestScore(

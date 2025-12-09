@@ -14,10 +14,15 @@ export type GameSnapshot = {
 	challengePart: string | null;
 };
 
+const getRandomLetter = () =>
+	String.fromCharCode(65 + Math.floor(Math.random() * 25));
+
 export const createSnapshotFromDb = (game: DbGame): GameSnapshot => {
 	const words = Array.isArray(game.wordsUsed) ? game.wordsUsed : [];
 	const last = words[words.length - 1];
-	const currentLetter = last ? last.slice(-1).toUpperCase() : 'A';
+	const currentLetter = last
+		? last.slice(-1).toUpperCase()
+		: getRandomLetter();
 
 	const challengePart =
 		game.mode === 'solo_challenge_contain_part'

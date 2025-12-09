@@ -1,13 +1,18 @@
+import { z } from 'zod';
+
 import { GAME_TIMERS } from './constants';
 
 export const dbModeToModeId = (dbMode: GameDbMode): GameModeId =>
 	dbMode.replace(/^solo_/, '') as GameModeId;
 
-export type GameModeId =
-	| 'tempo'
-	| 'length'
-	| 'hidden'
-	| 'challenge_contain_part';
+export const GameModeIdSchema = z.enum([
+	'tempo',
+	'length',
+	'hidden',
+	'challenge_contain_part'
+]);
+
+export type GameModeId = z.infer<typeof GameModeIdSchema>;
 
 export type GameModeConfig = {
 	id: GameModeId;

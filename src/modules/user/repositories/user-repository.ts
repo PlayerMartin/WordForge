@@ -41,3 +41,6 @@ export const FindUserByName = async (name: string) => {
 
 	return result[0] ?? null;
 };
+
+export const FindById = async (id: string) =>
+	await db.select().from(users).where(eq(users.id, id));

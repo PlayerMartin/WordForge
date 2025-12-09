@@ -35,6 +35,8 @@ export const GameStartSection = () => {
 			);
 
 			router.push(`/game/${gameID}`);
+		} catch {
+			console.error('Could not start game');
 		} finally {
 			setIsLoading(false);
 		}

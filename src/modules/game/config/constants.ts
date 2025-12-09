@@ -2,6 +2,8 @@
 // GAME CONSTANTS (module-scoped)
 // ============================================
 
+import { z } from 'zod';
+
 // Timers
 export const GAME_TIMERS = {
 	DEFAULT_TURN_TIME: 10,
@@ -21,11 +23,15 @@ export const GAME_SCORING = {
 	LENGTH_DIVISOR: 3
 } as const;
 
+// Zod + TypeScript cant handle dynamic schemas
 export const SUPPORTED_LANGUAGES = {
 	EN: { code: 'EN', name: 'English', flag: '🇬🇧', enabled: true },
 	CZ: { code: 'CZ', name: 'Čeština', flag: '🇨🇿', enabled: true },
 	SK: { code: 'SK', name: 'Slovenčina', flag: '🇸🇰', enabled: false }
 } as const;
+export const LanguageCodeSchema = z.enum(['EN', 'CZ', 'SK']);
 
-export type LanguageCode =
-	(typeof SUPPORTED_LANGUAGES)[keyof typeof SUPPORTED_LANGUAGES]['code'];
+export type LanguageCode = z.infer<typeof LanguageCodeSchema>;
+// APIs
+export const WORDS_API = (language: string, word: string) =>
+	`https://freedictionaryapi.com/api/v1/entries/${language}/${word}`;
